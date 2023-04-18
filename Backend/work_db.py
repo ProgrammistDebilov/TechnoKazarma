@@ -12,7 +12,9 @@ def sign_up(options):
     if role == 'инсталятор':
         role = 'i'
     elif role == 'диспетчер':
-        role = 'a'
+        role = 'd'
 
     cur.execute(
         f'INSERT INTO users (name, surname, login, password, role) VALUES({name}, {surname}, {login}, {password}, {role});')
+
+    con.commit()
