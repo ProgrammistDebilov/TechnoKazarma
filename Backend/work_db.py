@@ -3,12 +3,11 @@ import sqlite3 as sql3
 def sign_up(options):
     con = sql3.connect('Installs.db')
     cur = con.cursor()
-    print(options)
     login = options[0]
     password = options[1]
     role = options[2]
-    addres = 0
-
+    width = 0
+    length = 0
     if role == 'Инсталятор':
         role = 'i'
         width = options[3]
@@ -66,8 +65,8 @@ def return_aval_in():
 
     return availible_installs
 
-
-options = [123, 123]
-options_all = [123, 123, 'Инсталятор', 'test', 'test']
-sign_in(options)
-sign_up(options_all)
+if __name__ == '__main__':
+    options = [123, 123]
+    options_all = [123, 123, 'Инсталятор', 'test', 'test']
+    sign_in(options)
+    sign_up(options_all)
