@@ -3,10 +3,16 @@ import time
 import flet as ft
 
 def main(page: ft.Page):
-    Rosstelecom_logo = ft.Image(src='/images/r_logo.png', width=300,fit=ft.ImageFit.CONTAIN)
-
-    Title = ft.Row([Rosstelecom_logo],alignment=ft.MainAxisAlignment.CENTER)
-    t= ft.Column([Title],alignment=ft.MainAxisAlignment.CENTER)
+    Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
+    role_choose = ft.Dropdown(
+        width=200,
+        options=[
+            ft.dropdown.Option('Диспетчер'),
+            ft.dropdown.Option('Инсталятор')
+        ]
+    )
+    page.bgcolor = '#37474F'
+    t= ft.Column([Title,role_choose],alignment=ft.MainAxisAlignment.CENTER)
     c = ft.Container(content=t,width=page.width,height=page.height, alignment=ft.alignment.center)
     def change_size(e):
         c.width = page.width
