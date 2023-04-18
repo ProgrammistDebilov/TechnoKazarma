@@ -20,7 +20,6 @@ def sign_up(options):
     row = cur.fetchall()
 
     if row:
-        print(0)
         return 0 #логин занят
     else:
         cur.execute(f'INSERT INTO users (login, password, role) VALUES({login}, {password}, "{role}");')
@@ -37,7 +36,7 @@ def sign_in(options):
     login = options[0]
     pasword = options[1]
 
-    cur.execute(f'SELECT * FROM users WHERE login = {login} AND password = "{pasword}"').fetchall()
+    cur.execute(f'SELECT * FROM users WHERE login = "{login}" AND password = "{pasword}"')
     row = cur.fetchall()
 
     if row:
