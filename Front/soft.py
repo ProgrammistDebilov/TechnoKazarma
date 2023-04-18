@@ -1,7 +1,7 @@
 import time
 
 import flet as ft
-
+import Backend.work_db as fdb
 def main(page: ft.Page):
     def close_banner(e):
         page.banner.open = False
@@ -9,13 +9,12 @@ def main(page: ft.Page):
 
     def send_banner(message):
         page.banner = ft.Banner(
-            bgcolor='#CF6679',
+            bgcolor='#C62828',
             leading=ft.Image(src='favicon.png', fit=ft.ImageFit.CONTAIN, width=100),
-            content=ft.Text(message, color='#000000', size=25),
+            content=ft.Text(message, color=ft.colors.WHITE, size=25),
             actions=[
-                ft.ElevatedButton('Закрыть', on_click=close_banner, color='#BB86FC')
+                ft.ElevatedButton('Закрыть', on_click=close_banner, color='#7C4DFF')
             ]
-
         )
         page.banner.open = True
         page.update()
@@ -60,11 +59,12 @@ def main(page: ft.Page):
 
 
             if not brak:
-                print('Succes')
-                password.value = ''
-                login.value = ''
-                role_choose.value = None
-                page.go('/soft')
+                ok = fdb.sign_in((login.value,password.value))
+                if not ok:
+                    send_banner('Неверный логин/пароль')
+                if ok:
+                    close_banner('')
+                    page.go('/soft')
 
         else:#регистрация
             brak = False
@@ -94,11 +94,16 @@ def main(page: ft.Page):
 
 
             if not brak:
-                print('РФ')
+                ok = fdb.sign_up((login.value,password.value,role_choose.value))
                 password.value = ''
                 login.value = ''
                 role_choose.value = None
-                page.go('/soft')
+                if not ok:
+                    send_banner('Логин уже занят')
+                if ok:
+                    close_banner('')
+                    page.go('/soft')
+
 
     Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
@@ -165,7 +170,6 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
     page.go(page.route)
     page.theme_mode = 'DARK'
-    # page.add(c)
     page.on_resize = change_size
     page.update()
 
