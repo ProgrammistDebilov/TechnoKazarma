@@ -3,8 +3,6 @@ import time
 import flet as ft
 
 def main(page: ft.Page):
-
-
     def close_banner(e):
         page.banner.open = False
         page.update()
