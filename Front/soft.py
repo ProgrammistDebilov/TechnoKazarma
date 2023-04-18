@@ -1,5 +1,3 @@
-import time
-
 import flet as ft
 import Backend.work_db as fdb
 def main(page: ft.Page):
