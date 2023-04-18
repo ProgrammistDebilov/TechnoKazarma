@@ -1,7 +1,9 @@
 import sqlite3 as sql3
-
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "Installs.db")
 def sign_up(options):
-    con = sql3.connect('Installs.db')
+    con = sql3.connect(db_path)
     cur = con.cursor()
     login = options[0]
     password = options[1]
@@ -29,7 +31,7 @@ def sign_up(options):
         return 1
 
 def sign_in(options):
-    con = sql3.connect('Installs.db')
+    con = sql3.connect(db_path)
     cur = con.cursor()
 
     login = options[0]
