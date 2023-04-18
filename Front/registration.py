@@ -3,6 +3,25 @@ import time
 import flet as ft
 
 def main(page: ft.Page):
+
+
+    def close_banner(e):
+        page.banner.open = False
+        page.update()
+
+    def send_banner(message):
+        page.banner = ft.Banner(
+            bgcolor='#CF6679',
+            leading=ft.Image(src='favicon.png', fit=ft.ImageFit.CONTAIN, width=100),
+            content=ft.Text(message, color='#000000', size=25),
+            actions=[
+                ft.ElevatedButton('Закрыть', on_click=close_banner, color='#BB86FC')
+            ]
+
+        )
+        page.banner.open = True
+        page.update()
+
     def is_exist_acc_change(e):
         if is_exist_acc.value:
             is_exist_acc.label = 'Я уже смешарик'
