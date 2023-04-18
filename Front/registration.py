@@ -44,6 +44,10 @@ def main(page: ft.Page):
 
             if not brak:
                 print('Succes')
+                password.value = ''
+                login.value = ''
+                role_choose.value = None
+                page.go('/soft')
 
         else:#регистрация
             brak = False
@@ -74,6 +78,10 @@ def main(page: ft.Page):
 
             if not brak:
                 print('РФ')
+                password.value = ''
+                login.value = ''
+                role_choose.value = None
+                page.go('/soft')
 
     Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
@@ -97,15 +105,47 @@ def main(page: ft.Page):
 
 
     t= ft.Column(login_content,alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
-    c = ft.Container(content=t,width=page.width,height=page.height, alignment=ft.alignment.center)
+    login_screen_content = ft.Container(content=t,width=page.width,height=page.height, alignment=ft.alignment.center)
 
     #адаптивные размеры окон
     def change_size(e):
-        c.width = page.width
-        c.height = page.height
+        login_screen_content.width = page.width
+        login_screen_content.height = page.height
         page.update()
+
+
+    def route_change(route):
+        page.views.clear()
+        if page.route == '/' or page.route == '/login':
+            page.views.append(
+                ft.View(
+                    '/login',
+                    [
+                        login_screen_content
+                    ]
+                )
+
+            )
+        if page.route == '/soft':
+            page.views.append(
+                ft.View(
+                    '/soft',
+                    [
+                        ft.ElevatedButton('Exit',on_click=lambda _:page.go('/login'))
+                    ]
+                )
+            )
+        page.update()
+    def view_pop(view):
+        page.views.pop()
+        top_view = page.views[-1]
+        page.go(top_view.route)
+
+    page.on_route_change = route_change
+    page.on_view_pop = view_pop
+    page.go(page.route)
     page.theme_mode = 'DARK'
-    page.add(c)
+    # page.add(c)
     page.on_resize = change_size
     page.title = 'Ros Login'
     page.update()
