@@ -21,7 +21,10 @@ def main(page: ft.Page):
 
     def enter_btn_action(e):
         if is_exist_acc.value: #логин
-            brak = False
+            brak = False #ошибки при заполнение
+
+
+            ###проверки на зполнение
             if login.value == '':
                 login.error_text = 'Вы забыли заполнить'
                 login.update()
@@ -36,11 +39,16 @@ def main(page: ft.Page):
             else:
                 password.error_text = None
                 password.update()
+
+
+
             if not brak:
                 print('Succes')
 
         else:#регистрация
             brak = False
+
+            ###проверки на заполнение
             if login.value == '':
                 login.error_text = 'Вы забыли заполнить'
                 login.update()
@@ -62,6 +70,8 @@ def main(page: ft.Page):
             else:
                 role_choose.error_text = None
                 role_choose.update()
+
+
             if not brak:
                 print('РФ')
 
