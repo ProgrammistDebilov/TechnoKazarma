@@ -9,19 +9,19 @@ def sign_up(options):
     login = options[2]
     password = options[3]
     role = options[4]
-    if role == 'инсталятор':
+    if role == 'Инсталятор':
         role = 'i'
-    elif role == 'диспетчер':
+    elif role == 'Диспетчер':
         role = 'd'
     row = cur.execute(f'SELECT * FROM users WHERE login = {login}')
 
     if row:
-        print('Не не не, этот логин уже используется')
+        return 0 #логин занят
     else:
         cur.execute(
             f'INSERT INTO users (name, surname, login, password, role) VALUES({name}, {surname}, {login}, {password}, {role});')
-
-    con.commit()
+        con.commit()
+        return 1
 
 def sign_in(options):
     con = sql3.connect('installs.db')
@@ -33,6 +33,6 @@ def sign_in(options):
     row = cur.execute(f'SELECT * FROM users WHERE login = {login} AND WHERE password = {pasword}')
 
     if row:
-       print('good')
+       return 1#верные данные
     else:
-        print('bad')
+        return 0#неверные данные

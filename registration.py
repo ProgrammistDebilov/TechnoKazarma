@@ -6,8 +6,16 @@ def main(page: ft.Page):
     def is_exist_acc_change(e):
         if is_exist_acc.value:
             is_exist_acc.label = 'Я уже смешарик'
+            enter_btn.text = 'Войти'
+            try:
+                login_content.remove(role_choose)
+            except:
+                pass
         else:
             is_exist_acc.label = 'Я ещё не смешарик'
+            if role_choose not in login_content:
+                login_content.insert(3,role_choose)
+            enter_btn.text = 'Зарегистрироваться'
         page.update()
 
 
@@ -27,7 +35,7 @@ def main(page: ft.Page):
     is_exist_acc = ft.Checkbox(label='Я ещё не смешарик', value=False, on_change=is_exist_acc_change)
 
     page.bgcolor = '#37474F'
-    login_content = [Title,login,password,role_choose,is_exist_acc,enter_btn]
+    login_content = [Title,login,password,role_choose,enter_btn,is_exist_acc]
     t= ft.Column(login_content,alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     c = ft.Container(content=t,width=page.width,height=page.height, alignment=ft.alignment.center)
     def change_size(e):
