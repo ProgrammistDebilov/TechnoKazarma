@@ -28,7 +28,7 @@ cur = con.cursor()
 #             'installer INTEGER, '
 #             'FOREIGN KEY (installer) REFERENCES installers (id))')
 
-
+# cur.execute(f'INSERT INTO users (name, surname, login, password, role) VALUES("Иван", "Иванов", "klop22", "123", "installer");')
 
 
 con.commit()
