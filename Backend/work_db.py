@@ -1,7 +1,7 @@
 import sqlite3 as sql3
 
 def sign_up(options):
-    con = sql3.connect('installs.db')
+    con = sql3.connect('Installs.db')
     cur = con.cursor()
 
     login = options[0]
@@ -13,27 +13,28 @@ def sign_up(options):
         role = 'i'
     elif role == 'Диспетчер':
         role = 'd'
-    row = cur.execute(f'SELECT * FROM users WHERE login = {login}')
+    cur.execute(f'SELECT * FROM users WHERE login = {login}')
+    row = cur.fetchall()
 
     if row:
         return 0 #логин занят
     else:
-        cur.execute(
-            f'INSERT INTO users (login, password, role) VALUES({login}, {password}, {role});')
+        cur.execute(f'INSERT INTO users (login, password, role) VALUES({login}, {password}, "{role}");')
         if role == 'i':
             cur.execute(
-                f'INSERT INTO installers (username, alacrity) VALUES({login}, {password}, 1, {addres});')
+                f'INSERT INTO installers (username, alacrity, adress) VALUES({login}, 1, "{addres}");')
         con.commit()
         return 1
 
 def sign_in(options):
-    con = sql3.connect('installs.db')
+    con = sql3.connect('Installs.db')
     cur = con.cursor()
 
     login = options[0]
     pasword = options[1]
 
-    row = cur.execute(f'SELECT * FROM users WHERE login = {login} AND WHERE password = {pasword}').fetchall()
+    cur.execute(f'SELECT * FROM users WHERE login = {login} AND password = "{pasword}"').fetchall()
+    row = cur.fetchall()
 
     if row:
         return 1#верные данные
@@ -45,10 +46,24 @@ def sign_in(options):
 
 def add_order(adress, installer):
 
-    con = sql3.connect('installs.db')
+    con = sql3.connect('Installs.db')
     cur = con.cursor()
     alacrity = cur.execute(f'SELECT alacrity FROM installers WHERE username = {installer}').fetchall()
     if alacrity == 1:
         cur.execute(f'INSERT INTO orders (adress, installer) VALUES ({adress}, {installer})')
 
     con.commit()
+
+
+def return_aval_in():
+    con = sql3.connect('Installs.db')
+    cur = con.cursor()
+    cur.execute('SELECT username FROM installers WHERE alacrity = 1')
+    availible_installs = cur.fetchall()
+
+    return availible_installs
+
+
+options = [123, 123]
+options_all = [123, 123, 'Инсталятор', 'test']
+sign_in(options)

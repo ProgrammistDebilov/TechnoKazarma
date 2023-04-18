@@ -1,6 +1,6 @@
 import sqlite3 as sql3
 
-con = sql3.connect('installs.db')
+con = sql3.connect('Installs.db')
 cur = con.cursor()
 
 # cur.execute('CREATE TABLE users ('
@@ -17,8 +17,7 @@ cur = con.cursor()
 #             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
 #             'username TEXT, '
 #             'alacrity INTEGER, '
-#             'width TEXT, '
-#             'length TEXT, '
+#             'adress TEXT, '
 #             'FOREIGN KEY (username)  REFERENCES users (login))')
 #
 # cur.execute('CREATE TABLE orders ('
@@ -27,8 +26,8 @@ cur = con.cursor()
 #             'installer INTEGER, '
 #             'FOREIGN KEY (installer) REFERENCES installers (id))')
 
-# cur.execute(f'INSERT INTO users (name, surname, login, password, role) VALUES("Иван", "Иванов", "klop22", "123", "installer");')
-
+cur.execute(f'SELECT * FROM users')
+print(cur.fetchall())
 
 con.commit()
 
