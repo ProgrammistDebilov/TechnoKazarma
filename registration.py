@@ -20,7 +20,7 @@ def main(page: ft.Page):
         page.update()
 
     def enter_btn_action(e):
-        if is_exist_acc: #логин
+        if is_exist_acc.value: #логин
             brak = False
             if login.value == '':
                 login.error_text = 'Вы забыли заполнить'
@@ -40,7 +40,30 @@ def main(page: ft.Page):
                 print('Succes')
 
         else:#регистрация
-            pass
+            brak = False
+            if login.value == '':
+                login.error_text = 'Вы забыли заполнить'
+                login.update()
+                brak = True
+            else:
+                login.error_text = None
+                login.update()
+            if password.value == '':
+                password.error_text = 'У вас обязан быть пароль'
+                password.update()
+                brak = True
+            else:
+                password.error_text = None
+                password.update()
+            if role_choose.value == None:
+                role_choose.error_text = 'Роль обязательна'
+                role_choose.update()
+                brak = True
+            else:
+                role_choose.error_text = None
+                role_choose.update()
+            if not brak:
+                print('РФ')
 
     Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
