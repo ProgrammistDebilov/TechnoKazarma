@@ -1,4 +1,6 @@
 import flet as ft
+import sys
+print(sys.path)
 import Backend.work_db as fdb
 def main(page: ft.Page):
     def close_banner(e):
