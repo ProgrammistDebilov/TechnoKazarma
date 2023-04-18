@@ -12,6 +12,7 @@ cur = con.cursor()
 #             'role TEXT)')
 
 # cur.execute('DROP TABLE installers')
+# cur.execute('DROP TABLE orders')
 
 # cur.execute('CREATE TABLE installers ('
 #             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
@@ -19,12 +20,13 @@ cur = con.cursor()
 #             'surname TEXT, '
 #             'username TEXT, '
 #             'alacrity INTEGER, '
-#             'FOREIGN KEY (username)  REFERENCES users (login))')
-
-# cur.execute('CREATE TABLE orders ('
-#             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
 #             'width TEXT, '
 #             'length TEXT, '
+#             'FOREIGN KEY (username)  REFERENCES users (login))')
+#
+# cur.execute('CREATE TABLE orders ('
+#             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+#             'adress TEXT, '
 #             'installer INTEGER, '
 #             'FOREIGN KEY (installer) REFERENCES installers (id))')
 

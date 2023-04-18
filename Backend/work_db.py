@@ -9,6 +9,9 @@ def sign_up(options):
     login = options[2]
     password = options[3]
     role = options[4]
+    width = options[5]
+    length = options[6]
+
     if role == 'Инсталятор':
         role = 'i'
     elif role == 'Диспетчер':
@@ -20,6 +23,9 @@ def sign_up(options):
     else:
         cur.execute(
             f'INSERT INTO users (name, surname, login, password, role) VALUES({name}, {surname}, {login}, {password}, {role});')
+        if role == 'i':
+            cur.execute(
+                f'INSERT INTO installers (name, surname, username, alacrity) VALUES({name}, {surname}, {login}, {password}, 1, {width}, {length});')
         con.commit()
         return 1
 
@@ -36,3 +42,13 @@ def sign_in(options):
        return 1#верные данные
     else:
         return 0#неверные данные
+
+
+
+def add_order(adress, installer):
+    con = sql3.connect('installs.db')
+    cur = con.cursor()
+
+    cur.execute(f'INSERT INTO orders (adress, installer) VALUES ({adress}, {installer})')
+
+    con.commit()
