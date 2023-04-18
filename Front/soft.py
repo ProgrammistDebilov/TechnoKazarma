@@ -61,7 +61,10 @@ def main(page: ft.Page):
                 if not ok:
                     send_banner('Неверный логин/пароль')
                 if ok:
-                    close_banner('')
+                    try:
+                        close_banner('')
+                    except AttributeError:
+                        pass
                     page.go('/soft')
 
         else:#регистрация
@@ -99,7 +102,10 @@ def main(page: ft.Page):
                 if not ok:
                     send_banner('Логин уже занят')
                 if ok:
-                    close_banner('')
+                    try:
+                        close_banner('')
+                    except AttributeError:
+                        pass
                     page.go('/soft')
 
 
