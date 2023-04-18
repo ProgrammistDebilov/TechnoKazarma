@@ -9,11 +9,11 @@ def main(page: ft.Page):
 
     def send_banner(message):
         page.banner = ft.Banner(
-            bgcolor='#CF6679',
+            bgcolor='#C62828',
             leading=ft.Image(src='favicon.png', fit=ft.ImageFit.CONTAIN, width=100),
-            content=ft.Text(message, color='#000000', size=25),
+            content=ft.Text(message, color=ft.colors.WHITE, size=25),
             actions=[
-                ft.ElevatedButton('Закрыть', on_click=close_banner, color='#BB86FC')
+                ft.ElevatedButton('Закрыть', on_click=close_banner, color='#7C4DFF')
             ]
 
         )
@@ -98,7 +98,7 @@ def main(page: ft.Page):
                 password.value = ''
                 login.value = ''
                 role_choose.value = None
-                page.go('/soft')
+                send_banner('Проверочка')
 
     Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
