@@ -5,19 +5,16 @@ cur = con.cursor()
 
 # cur.execute('CREATE TABLE users ('
 #             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-#             'name TEXT, '
-#             'surname TEXT, '
 #             'login TEXT, '
 #             'password TEXT, '
 #             'role TEXT)')
 
 # cur.execute('DROP TABLE installers')
+# cur.execute('DROP TABLE users')
 # cur.execute('DROP TABLE orders')
 
 # cur.execute('CREATE TABLE installers ('
 #             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
-#             'name TEXT, '
-#             'surname TEXT, '
 #             'username TEXT, '
 #             'alacrity INTEGER, '
 #             'width TEXT, '
