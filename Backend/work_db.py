@@ -11,19 +11,21 @@ def sign_up(options):
 
     if role == 'Инсталятор':
         role = 'i'
-        addres = options[3]
+        width = options[3]
+        length = options[4]
     elif role == 'Диспетчер':
         role = 'd'
     cur.execute(f'SELECT * FROM users WHERE login = {login}')
     row = cur.fetchall()
 
     if row:
+        print(0)
         return 0 #логин занят
     else:
         cur.execute(f'INSERT INTO users (login, password, role) VALUES({login}, {password}, "{role}");')
         if role == 'i':
             cur.execute(
-                f'INSERT INTO installers (username, alacrity, adress) VALUES({login}, 1, "{addres}");')
+                f'INSERT INTO installers (username, alacrity, width, length) VALUES({login}, 1, {width}, {length});')
         con.commit()
         return 1
 
@@ -66,5 +68,6 @@ def return_aval_in():
 
 
 options = [123, 123]
-options_all = [123, 123, 'Инсталятор', 'test']
+options_all = [123, 123, 'Инсталятор', 'test', 'test']
 sign_in(options)
+sign_up(options_all)

@@ -17,7 +17,8 @@ cur = con.cursor()
 #             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
 #             'username TEXT, '
 #             'alacrity INTEGER, '
-#             'adress TEXT, '
+#             'width TEXT, '
+#             'length TEXT, '
 #             'FOREIGN KEY (username)  REFERENCES users (login))')
 #
 # cur.execute('CREATE TABLE orders ('
