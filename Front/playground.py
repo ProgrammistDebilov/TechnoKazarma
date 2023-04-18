@@ -12,3 +12,5 @@ world_map = folium.Map()
 
 # display world map
 world_map
+
+#test
