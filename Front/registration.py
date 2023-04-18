@@ -3,8 +3,6 @@ import time
 import flet as ft
 
 def main(page: ft.Page):
-
-
     def close_banner(e):
         page.banner.open = False
         page.update()
@@ -148,7 +146,6 @@ def main(page: ft.Page):
             )
         if page.route == '/soft':
             page.title = 'Это победа, братья'
-
             page.views.append(
                 ft.View(
                     '/soft',
