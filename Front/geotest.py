@@ -31,5 +31,5 @@ colormap = branca.colormap.LinearColormap(['blue', 'lime', 'red'],
                                           vmax=5, 
                                           caption='Нарастание загруженности')
 colormap.add_to(m)
-m.save("a.html")
-webbrowser.open("a.html")
+m.save("geo.html")
+webbrowser.open("geo.html")
