@@ -15,7 +15,6 @@ def main(page: ft.Page):
             actions=[
                 ft.ElevatedButton('Закрыть', on_click=close_banner, color='#7C4DFF')
             ]
-
         )
         page.banner.open = True
         page.update()
