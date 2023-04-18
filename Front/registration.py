@@ -136,6 +136,7 @@ def main(page: ft.Page):
     def route_change(route):
         page.views.clear()
         if page.route == '/' or page.route == '/login':
+            page.title = 'Ros Login'
             page.views.append(
                 ft.View(
                     '/login',
@@ -146,6 +147,8 @@ def main(page: ft.Page):
 
             )
         if page.route == '/soft':
+            page.title = 'Это победа, братья'
+
             page.views.append(
                 ft.View(
                     '/soft',
@@ -160,13 +163,13 @@ def main(page: ft.Page):
         top_view = page.views[-1]
         page.go(top_view.route)
 
+
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.go(page.route)
     page.theme_mode = 'DARK'
     # page.add(c)
     page.on_resize = change_size
-    page.title = 'Ros Login'
     page.update()
 
 
