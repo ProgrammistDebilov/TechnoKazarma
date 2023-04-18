@@ -148,7 +148,6 @@ def main(page: ft.Page):
             )
         if page.route == '/soft':
             page.title = 'Это победа, братья'
-
             page.views.append(
                 ft.View(
                     '/soft',
