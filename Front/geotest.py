@@ -19,6 +19,8 @@ randomdata= []
 
 for i in range(100000):
     randomdata.append((random.randint(-90.000000000,90.000000000),random.randint(-720.000000000,720.000000000)))
+for i in randomdata:
+    folium.Marker()
 
 #longatt= str(location.latitude)+","+str(location.longitude)
 plugins.HeatMap(randomdata, radius=10, gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'red'}).add_to(m)
