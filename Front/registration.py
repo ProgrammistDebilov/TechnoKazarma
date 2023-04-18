@@ -3,7 +3,6 @@ import time
 import flet as ft
 
 def main(page: ft.Page):
-    page.theme_mode = ft.Page.dark_theme
     def is_exist_acc_change(e):
         if is_exist_acc.value:
             is_exist_acc.label = 'Я уже смешарик'
@@ -77,8 +76,8 @@ def main(page: ft.Page):
                 print('РФ')
 
     Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
-    login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF', color=ft.colors.WHITE)
-    password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF', color=ft.colors.WHITE)
+    login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
+    password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF')
     role_choose = ft.Dropdown(
         label='Роль',
         width=155,
@@ -105,9 +104,10 @@ def main(page: ft.Page):
         c.width = page.width
         c.height = page.height
         page.update()
-
+    page.theme_mode = 'DARK'
     page.add(c)
     page.on_resize = change_size
+    page.title = 'Ros Login'
     page.update()
 
 
