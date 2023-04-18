@@ -37,12 +37,14 @@ def sign_in(options):
     login = options[0]
     pasword = options[1]
 
-    cur.execute(f'SELECT * FROM users WHERE login = {login} AND password = "{pasword}"').fetchall()
+    cur.execute(f'SELECT * FROM users WHERE login = "{login}" AND password = "{pasword}"')
     row = cur.fetchall()
 
     if row:
+        print('круто')
         return 1#верные данные
     else:
+        print('не круто')
         return 0#неверные данные
 
 
