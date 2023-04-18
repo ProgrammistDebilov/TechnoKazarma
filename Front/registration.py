@@ -1,7 +1,7 @@
 import time
 
 import flet as ft
-
+import Backend.work_db as fdb
 def main(page: ft.Page):
     def close_banner(e):
         page.banner.open = False
@@ -60,11 +60,12 @@ def main(page: ft.Page):
 
 
             if not brak:
-                print('Succes')
-                password.value = ''
-                login.value = ''
-                role_choose.value = None
-                page.go('/soft')
+                ok = fdb.sign_in((login.value,password.value))
+                if not ok:
+                    send_banner('Неверный логин/пароль')
+                if ok:
+                    close_banner('')
+                    page.go('/soft')
 
         else:#регистрация
             brak = False
@@ -94,11 +95,16 @@ def main(page: ft.Page):
 
 
             if not brak:
-                print('РФ')
+                ok = fdb.sign_up((login.value,password.value,role_choose.value))
                 password.value = ''
                 login.value = ''
                 role_choose.value = None
-                send_banner('Проверочка')
+                if not ok:
+                    send_banner('Логин уже занят')
+                if ok:
+                    close_banner('')
+                    page.go('/soft')
+
 
     Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')

@@ -3,14 +3,15 @@ import sqlite3 as sql3
 def sign_up(options):
     con = sql3.connect('installs.db')
     cur = con.cursor()
-
+    print(options)
     login = options[0]
     password = options[1]
     role = options[2]
-    addres = options[3]
+    addres = 0
 
     if role == 'Инсталятор':
         role = 'i'
+        addres = options[3]
     elif role == 'Диспетчер':
         role = 'd'
     row = cur.execute(f'SELECT * FROM users WHERE login = {login}')
