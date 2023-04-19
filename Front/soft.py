@@ -176,8 +176,11 @@ def main(page: ft.Page):
     down_bar = ft.Container(content=down_bar_content,width=page.width,height=60, bgcolor='#B388FF', alignment=ft.alignment.top_center)
 
 
-    show_map_btn = ft.ElevatedButton('Открыть карту', width=200,height=50, bgcolor='#ff4f12', color=ft.colors.WHITE, on_click=lambda _ : webbrowser.open('file://' + os.path.realpath("geo.html")))
-    soft_main_list_content = [show_map_btn]
+
+    show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : webbrowser.open("geo.html"))
+    add_new_order_btn = ft.ElevatedButton('Зафиксировать заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE)
+    soft_main_list_content = [show_map_btn,add_new_order_btn]
+
 
     soft_main_content = ft.Column(soft_main_list_content, alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     soft_main_window = ft.Container(content=soft_main_content,width=page.width, height=page.height - down_bar.height, alignment=ft.alignment.center)
