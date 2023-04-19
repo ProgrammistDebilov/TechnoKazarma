@@ -20,12 +20,15 @@ def sign_up(options):
     row = cur.fetchall()
 
     if row:
+        print('логин занят')
         return 0 #логин занят
     else:
         cur.execute(f'INSERT INTO users (login, password, role) VALUES({login}, {password}, "{role}");')
+        print("норм")
         if role == 'i':
             cur.execute(
-                f'INSERT INTO installers (username, alacrity, width, length) VALUES({login}, 1, {width}, {length});')
+                f'INSERT INTO installers (username, alacrity, width, length) VALUES({login}, 1, "{width}", "{length}");')
+            print("норм инсталятор")
         con.commit()
         return 1
 
@@ -48,12 +51,13 @@ def sign_in(options):
 
 
 def add_order(adress, installer):
-
     con = sql3.connect('Installs.db')
     cur = con.cursor()
-    alacrity = cur.execute(f'SELECT alacrity FROM installers WHERE username = {installer}').fetchall()
+
+    alacrity = cur.execute(f'SELECT alacrity FROM installers WHERE username = {installer}').fetchall()[0][0]
+    print(alacrity)
     if alacrity == 1:
-        cur.execute(f'INSERT INTO orders (adress, installer) VALUES ({adress}, {installer})')
+        cur.execute(f'INSERT INTO orders (adress, installer) VALUES ("{adress}", {installer})')
 
     con.commit()
 
@@ -61,13 +65,18 @@ def add_order(adress, installer):
 def return_aval_in():
     con = sql3.connect('Installs.db')
     cur = con.cursor()
-    cur.execute('SELECT username FROM installers WHERE alacrity = 1')
-    availible_installs = cur.fetchall()
 
+    cur.execute('SELECT username FROM installers WHERE alacrity = 1')
+
+    availible_installs = cur.fetchall()[0]
+    print(availible_installs)
     return availible_installs
 
+options = [123, 123]
+options_all = [123, 123, 'Инсталятор', 'test', 'test']
+
 if __name__ == '__main__':
-    options = [123, 123]
-    options_all = [123, 123, 'Инсталятор', 'test', 'test']
-    sign_in(options)
-    sign_up(options_all)
+    # sign_in(options)
+    # sign_up(options_all)
+    # return_aval_in()
+    add_order('ул. Путина 36', '123')
