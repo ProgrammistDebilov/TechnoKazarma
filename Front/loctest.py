@@ -1,52 +1,45 @@
 import dash
 import dash_html_components as html
-import dash_core_components as dcc
 import dash_leaflet as dl
+import dash_core_components as dcc
+import pandas as pd
+import numpy as np
+from dash.dependencies import Output, Input
 import random
 
-# Define initial location for marker
-marker_location = [51.5074, -0.1278]
-
-# Define function to generate random marker location
-def generate_marker_location():
-    lat = random.uniform(-90, 90)
-    lng = random.uniform(-180, 180)
-    print(lat,lng)
-    return [lat, lng]
-
-# Define Dash app
+# Create a Dash app
 app = dash.Dash(__name__)
 
-# Define map component
-map_component = dl.Map(
-    center=marker_location,
-    zoom=10,
-    children=[
-        dl.Marker(
-            position=marker_location,
-            id="marker",
-            children=[
-                dl.Tooltip("My Marker")
-            ]
-        )
-    ]
-)
+# Define the initial marker position
+marker_position = [random.randint(-90,90), random.randint(-180,180)]
 
-# Define callback function to update marker location
-@app.callback(
-    dash.dependencies.Output("marker", "position"),
-    [dash.dependencies.Input("interval", "n_intervals")]
-)
+# Define a list of marker positions to loop through
+marker_positions = [
+    [37.7749, -122.4194],
+    [40.7128, -74.0060],
+    [51.5074, -0.1278],
+    [35.6895, 139.6917],
+]
+
+# Define the layout of the app
+app.layout = html.Div([
+    dl.Map([
+        dl.TileLayer(),
+        dl.Marker(id='marker', position=marker_position),
+    ], style={'width': '100%', 'height': '50vh', 'margin': "auto", "display": "block"}, zoom=10),
+    dcc.Interval(
+        id='interval',
+        interval=2000, # Refresh every 2 seconds
+        n_intervals=0
+    )
+])
+
+# Define a callback to update the marker position
+@app.callback(Output('marker', 'position'), [Input('interval', 'n_intervals')])
 def update_marker_position(n):
-    return generate_marker_location()
+    # Get the next marker position from the list
+    return [random.randint(-90,90), random.randint(-180,180)]
 
-# Define layout
-# app.layout = html.Div([
-#     map_component,
-#     html.Br(),
-#     dcc.Interval(id="interval", interval=2000),
-# ])
-
-# Run app
+# Run the app
 if __name__ == '__main__':
     app.run_server()
