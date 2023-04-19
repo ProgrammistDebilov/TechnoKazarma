@@ -64,13 +64,16 @@ def add_order(adress, installer):
 def return_aval_in():
     con = sql3.connect('Installs.db')
     cur = con.cursor()
-    cur.execute('SELECT username FROM installers WHERE alacrity = 1')
-    availible_installs = cur.fetchall()
 
+    cur.execute('SELECT * FROM installers')
+
+    availible_installs = cur.fetchall()
+    print(availible_installs)
     return availible_installs
 
 if __name__ == '__main__':
-    options = [123, 123]
-    options_all = [123, 123, 'Инсталятор', 'test', 'test']
-    sign_in(options)
-    sign_up(options_all)
+    # options = [123, 123]
+    # options_all = [123, 123, 'Инсталятор', 'test', 'test']
+    # sign_in(options)
+    # sign_up(options_all)
+    return_aval_in()

@@ -9,8 +9,8 @@ cur = con.cursor()
 #             'password TEXT, '
 #             'role TEXT)')
 
-# cur.execute('DROP TABLE installers')
-# cur.execute('DROP TABLE users')
+cur.execute('DROP TABLE installers')
+cur.execute('DROP TABLE users')
 # cur.execute('DROP TABLE orders')
 
 # cur.execute('CREATE TABLE installers ('
@@ -18,17 +18,22 @@ cur = con.cursor()
 #             'username TEXT, '
 #             'alacrity INTEGER, '
 #             'width TEXT, '
-#             'length TEXT, '
-#             'FOREIGN KEY (username)  REFERENCES users (login))')
+#             'length TEXT)')
 #
 # cur.execute('CREATE TABLE orders ('
 #             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
 #             'adress TEXT, '
 #             'installer INTEGER, '
 #             'FOREIGN KEY (installer) REFERENCES installers (id))')
+# print('Users')
+# cur.execute(f'SELECT * FROM users')
+# print(cur.fetchall())
+#
+# print('Installers')
+# cur.execute('SELECT * FROM installers')
+# print(cur.fetchall())
 
-cur.execute(f'SELECT * FROM users')
-print(cur.fetchall())
+
 
 con.commit()
 
