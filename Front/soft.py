@@ -220,14 +220,16 @@ def main(page: ft.Page):
 
     #адаптивные размеры окон
     def change_size(e):
-        login_screen_content.width = page.width
-        Title.width = page.width//30
-        login_screen_content.height = page.height
-        down_bar.width = page.width
-        soft_main_content.width = page.width
-        soft_main_content.height = page.height - down_bar.height
-        soft_screen_content.width = page.width
-        soft_screen_content.height = page.height
+        if page.route == '/login':
+            login_screen_content.width = page.width
+            Title.width = page.width//30
+            login_screen_content.height = page.height
+        elif page.route == '/soft':
+            down_bar.width = page.width
+            soft_main_content.width = page.width
+            soft_main_window.height = page.height - down_bar.height
+            soft_main_window.width = page.width
+            soft_screen_content.height = page.height
         page.update()
 
 
