@@ -284,8 +284,8 @@ def main(page: ft.Page):
     soft_screen_content = ft.Container(content=soft_colummn_main, width=page.width,height=page.height)
 
     installers_screen_row_main = ft.Row([ft.Card(content=installs,width=400)], alignment=ft.MainAxisAlignment.CENTER)
-    installers_screen_content = ft.Container(content=installers_screen_row_main, width=page.width,height=page.height-down_bar.height)
 
+    installers_screen_content = ft.Container(content=ft.Column([installers_screen_row_main], scroll='adaptive'), width=page.width,height=page.height-down_bar.height)
 
     #адаптивные размеры окон
     def change_size(e):
@@ -336,7 +336,7 @@ def main(page: ft.Page):
                     [
                         installers_screen_content,
                         down_bar
-                    ]
+                    ],
                 )
             )
         page.update()
