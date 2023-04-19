@@ -179,7 +179,7 @@ def main(page: ft.Page):
         add_order_dialog.open = True
         page.update()
 
-    adress_field_add_order = ft.TextField(width=100,label='Адрес заявки', hint_text='Напишите адрес заявки')
+    adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите адрес заявки')
     installers = ft.Dropdown()
     add_order_dialog = ft.AlertDialog(
         modal=True,
