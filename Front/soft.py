@@ -4,6 +4,7 @@ import os
 import Backend.work_db as fdb
 import Backend.location as gps
 def main(page: ft.Page):
+
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
             match e.key:
@@ -138,7 +139,7 @@ def main(page: ft.Page):
                     page.go('/soft')
 
 
-    Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
+    Title = ft.Image(src='/images/r_logo.png',width=page.width//30,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
     password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF', password=True, can_reveal_password=True)
     role_choose = ft.Dropdown(
@@ -177,7 +178,6 @@ def main(page: ft.Page):
         page.update()
     def open_alert_dlg(e):
         page.dialog = add_order_dialog
-
         add_order_dialog.open = True
         page.update()
 
@@ -222,6 +222,7 @@ def main(page: ft.Page):
     #адаптивные размеры окон
     def change_size(e):
         login_screen_content.width = page.width
+        Title.width = page.width//30
         login_screen_content.height = page.height
         down_bar.width = page.width
         soft_main_content.width = page.width
@@ -240,8 +241,9 @@ def main(page: ft.Page):
                 ft.View(
                     '/login',
                     [
-                        login_screen_content
-                    ]
+                        ft.ListView(controls=[login_screen_content],expand=False,spacing=0)
+                    ],
+                    scroll='Auto'
                 )
 
             )
@@ -271,6 +273,7 @@ def main(page: ft.Page):
     page.go(page.route)
     page.theme_mode = 'DARK'
     page.on_resize = change_size
+
     page.update()
 
 
