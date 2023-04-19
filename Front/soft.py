@@ -1,5 +1,5 @@
 import flet as ft
-
+import webbrowser
 import Backend.work_db as fdb
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
@@ -175,7 +175,7 @@ def main(page: ft.Page):
     down_bar = ft.Container(content=down_bar_content,width=page.width,height=60, bgcolor='#B388FF', alignment=ft.alignment.top_center)
 
 
-    show_map_btn = ft.ElevatedButton('Открыть карту', width=200,height=50, bgcolor='#ff4f12', color=ft.colors.WHITE)
+    show_map_btn = ft.ElevatedButton('Открыть карту', width=200,height=50, bgcolor='#ff4f12', color=ft.colors.WHITE, on_click=lambda _ : webbrowser.open("geo.html"))
     soft_main_list_content = [show_map_btn]
 
     soft_main_content = ft.Column(soft_main_list_content, alignment=ft.MainAxisAlignment.CENTER)
