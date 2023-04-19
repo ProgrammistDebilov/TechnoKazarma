@@ -209,7 +209,9 @@ def main(page: ft.Page):
         page.update()
 
     adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите город и адрес')
-    installers = ft.Dropdown()
+    installers_alert = ft.Dropdown()
+    installers_info = []
+    installs = ft.Column(installers_info)
     add_order_dialog = ft.AlertDialog(
         modal=True,
         title = ft.Text('Зафиксировать заявку'),
@@ -218,7 +220,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 [
                 adress_field_add_order,
-                installers
+                installers_alert
                 ]
             )
         ),actions=[ft.TextButton('Зафиксировать', on_click=close_alert_dlg), ft.TextButton('Отмена', on_click=close_alert_dlg)]
@@ -280,7 +282,8 @@ def main(page: ft.Page):
                 ft.View(
                     '/soft',
                     [
-                        soft_screen_content
+                        # soft_screen_content
+                        ft.Row([ft.Card(content=installs,width=400)], alignment=ft.MainAxisAlignment.CENTER)
                     ]
                 )
             )
@@ -299,6 +302,18 @@ def main(page: ft.Page):
         elif page.client_storage.get('role') == 'Диспетчер':
             if add_new_order_btn not in soft_main_list_content:
                 soft_main_list_content.append(add_new_order_btn)
+        for i in fdb.return_installers():
+            icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
+            if i.get('alacrity') == 1:
+                icon.color = ft.colors.GREEN
+            else:
+                icon.color = ft.colors.RED
+            installers_info.append(
+                ft.ListTile(
+                    leading=icon,
+                    title=ft.Text(i.get('login'))
+                )
+            )
         page.update()
         page.go('/soft')
     else:

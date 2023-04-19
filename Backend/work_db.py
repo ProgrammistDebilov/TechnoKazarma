@@ -130,7 +130,7 @@ def return_installers():
         installer_d = {'login' : i[0], 'alacrity' : i[1]}
         installers.append(installer_d)
 
-    print(installers)
+    return installers
 
 options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
