@@ -49,24 +49,22 @@ def sign_in(options):
         print('не круто')
         return 0#неверные данные
 
-def add_order(adress, installer):
+def add_order(adress, installer, start_time):
     con = sql3.connect(db_path)
     cur = con.cursor()
 
     alacrity = cur.execute(f'SELECT alacrity FROM installers WHERE username = {installer}').fetchall()[0][0]
     if alacrity == 1:
-        cur.execute(f'INSERT INTO orders (adress, installer) VALUES ("{str(adress)}", {str(installer)})')
+        cur.execute(f'INSERT INTO orders (adress, installer, state, start_time) VALUES ("{str(adress)}", {str(installer)}, 0, {str(start_time)})')
     cur.execute(f'UPDATE installers SET alacrity = 0 WHERE username = {str(installer)}')
 
     con.commit()
 
-
-
-def finish_order(installer):
+def finish_order(installer, end_time):
     con = sql3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute(f'DELETE FROM orders WHERE installer = {str(installer)}')
+    cur.execute(f'UPDATE orders SET state = 1, end_time = {end_time} WHERE installer = {str(installer)}')
     con.commit()
 
     cur.execute(f'UPDATE installers SET alacrity = 1 WHERE username = {str(installer)}')
@@ -139,9 +137,9 @@ if __name__ == '__main__':
     # sign_in(options)
     # sign_up(options_all)
     # return_aval_in()
-    # add_order('ул. Путина 36', '123')
+    # add_order('ул. Путина 36', '123', '12.30')
     # return_location('fgh')
     # return_role('123')
     # insert_location(123, 23.567, 45.432)
-    # finish_order(123)
+    finish_order(123, '13.45')
     return_installers()
