@@ -2,6 +2,24 @@ import flet as ft
 
 import Backend.work_db as fdb
 def main(page: ft.Page):
+    def keyboard_shortcuts(e:ft.KeyboardEvent):
+        if page.route == '/login':
+            match e.key:
+                case 'Enter':
+                    enter_btn_action('')
+                case '\\':
+                    is_exist_acc.value = not is_exist_acc.value
+                    is_exist_acc_change('')
+                    is_exist_acc.update()
+                case 'Delete':
+                    login.value = ''
+                    password.value = ''
+                    role_choose.value = None
+                    is_exist_acc.value = False
+                    is_exist_acc_change('')
+                    page.update()
+
+
     def close_banner(e):
         page.banner.open = False
         page.update()
@@ -120,7 +138,7 @@ def main(page: ft.Page):
 
     Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
-    password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF')
+    password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF', password=True, can_reveal_password=True)
     role_choose = ft.Dropdown(
         label='Роль',
         width=155,
@@ -186,6 +204,7 @@ def main(page: ft.Page):
         page.go('/login')
     page.on_route_change = route_change
     page.on_view_pop = view_pop
+    page.on_keyboard_event = keyboard_shortcuts
     page.go(page.route)
     page.theme_mode = 'DARK'
     page.on_resize = change_size
