@@ -8,6 +8,6 @@ def get_loc():
 
     return data['loc'].split(',')
 if __name__ == '__main__':
-    print(get_loc().split(',')[0])
+    print(get_loc())
 
 
