@@ -60,6 +60,17 @@ def add_order(adress, installer):
 
     con.commit()
 
+
+
+def finish_order(installer):
+    con = sql3.connect('Installs.db')
+    cur = con.cursor()
+
+    cur.execute(f'DELETE * FROM orders WHERE installer = {installer}')
+    con.commit()
+
+
+
 def return_aval_in():
     con = sql3.connect('Installs.db')
     cur = con.cursor()
@@ -113,7 +124,7 @@ if __name__ == '__main__':
     # sign_in(options)
     # sign_up(options_all)
     return_aval_in()
-    # add_order('ул. Путина 36', '123')
+    add_order('ул. Путина 36', '123')
     return_location('fgh')
     # return_role('123')
     # insert_location(123, 23.567, 45.432)
