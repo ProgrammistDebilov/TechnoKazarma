@@ -39,7 +39,7 @@ def sign_in(options):
     login = options[0]
     pasword = options[1]
 
-    cur.execute(f'SELECT * FROM users WHERE login = {str(login)} AND password = {str(pasword)}')
+    cur.execute(f'SELECT * FROM users WHERE login = "{str(login)}" AND password = "{str(pasword)}"')
     row = cur.fetchall()
 
     if row:
@@ -99,7 +99,7 @@ def return_role(login):
     con = sql3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute(f'SELECT role FROM users WHERE login = {str(login)}')
+    cur.execute(f'SELECT role FROM users WHERE login = "{str(login)}"')
     role = cur.fetchall()[0][0]
     print(role)
     if role == 'i':
