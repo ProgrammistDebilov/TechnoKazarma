@@ -4,6 +4,7 @@ import os
 import Backend.work_db as fdb
 import Backend.location as gps
 def main(page: ft.Page):
+    page.scroll = 'TRUE'
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
             match e.key:
