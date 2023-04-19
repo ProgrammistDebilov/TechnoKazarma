@@ -169,10 +169,17 @@ def main(page: ft.Page):
     def exit_btn(e):
         page.client_storage.clear()
         page.go('/login')
-    exit = ft.IconButton('Exit',on_click=exit_btn)
-    dow_bar_content = ft.Row([exit])
-    down_bar = ft.Container(content=,width=page.width,height=100, bgcolor='#B388FF', alignment=ft.alignment.center)
+    #Нижняя панель
+    exit = ft.IconButton(icon=ft.icons.EXIT_TO_APP,on_click=exit_btn, icon_color='#6200EA',icon_size=20)
+    down_bar_content = ft.Row([exit],  alignment=ft.MainAxisAlignment.CENTER)
+    down_bar = ft.Container(content=down_bar_content,width=page.width,height=60, bgcolor='#B388FF', alignment=ft.alignment.top_center)
+
+
+
     soft_main_content = ft.Container(width=page.width, height=page.height - down_bar.height)
+
+
+
     soft_colummn_main = ft.Column([soft_main_content,down_bar])
     soft_screen_content = ft.Container(content=soft_colummn_main, width=page.width,height=page.height)
 
