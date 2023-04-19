@@ -138,7 +138,7 @@ def main(page: ft.Page):
                     page.go('/soft')
 
 
-    Title = ft.Image(src='/images/r_logo.png',width=page.width//30,fit=ft.ImageFit.CONTAIN)
+    Title = ft.Image(src='/images/r_logo.png',width=page.width//25,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
     password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF', password=True, can_reveal_password=True)
     role_choose = ft.Dropdown(
@@ -180,7 +180,7 @@ def main(page: ft.Page):
         add_order_dialog.open = True
         page.update()
 
-    adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите адрес заявки')
+    adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите город и адрес')
     installers = ft.Dropdown()
     add_order_dialog = ft.AlertDialog(
         modal=True,
@@ -220,16 +220,14 @@ def main(page: ft.Page):
 
     #адаптивные размеры окон
     def change_size(e):
-        if page.route == '/login':
-            login_screen_content.width = page.width
-            Title.width = page.width//30
-            login_screen_content.height = page.height
-        elif page.route == '/soft':
-            down_bar.width = page.width
-            soft_main_content.width = page.width
-            soft_main_window.height = page.height - down_bar.height
-            soft_main_window.width = page.width
-            soft_screen_content.height = page.height
+        login_screen_content.width = page.width
+        Title.width = page.width//25
+        login_screen_content.height = page.height
+        down_bar.width = page.width
+        soft_main_content.width = page.width
+        soft_main_window.height = page.height - down_bar.height
+        soft_main_window.width = page.width
+        soft_screen_content.height = page.height
         page.update()
 
 
