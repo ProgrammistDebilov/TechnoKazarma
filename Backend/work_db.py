@@ -57,10 +57,10 @@ def add_order(adress):
 
     con.commit()
 
-def start_order(installer, id, start_time):
+def start_order(installer,adress, start_time):
     con = sql3.connect(db_path)
     cur = con.cursor()
-
+    id = return_id(adress)
     cur.execute(f'UPDATE orders SET state = 0, installer = {str(installer)}, start_time = {str(start_time)} WHERE id = {id}')
     con.commit()
     cur.execute(f'UPDATE installers SET alacrity = 0 WHERE username = {str(installer)}')
@@ -165,6 +165,23 @@ def return_installers():
 
     return installers
 
+
+
+
+def return_id(adress):
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'SELECT id FROM orders WHERE adress = "{str(adress)}" AND state = -1')
+    id = cur.fetchall()[0][0]
+
+    return id
+
+
+
+
+
+
 options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 
@@ -178,6 +195,6 @@ if __name__ == '__main__':
     # insert_location(123, 23.5, 45.432)
     # finish_order(123, '18.20')
     # print(return_installers())
-    # start_order(123, 3, 14.50)
-    return_orders()
-    return_orders_n()
+    start_order(123, 'ул. Путина 36', 14.50)
+    # return_orders()
+    # return_orders_n()

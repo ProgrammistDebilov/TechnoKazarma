@@ -267,12 +267,28 @@ def main(page: ft.Page):
         page.update()
 
     def open_alert_accept_order_dlg(e):
+        reqs = fdb.return_orders_n()
+        reqs_accept_order_options.clear()
+        for i in reqs:
+            reqs_accept_order_options.append(ft.dropdown.Option(i.get('adress')))
+
         page.dialog = accept_order_dialog
         accept_order_dialog.open = True
         page.update()
 
+    def add_order_func(e):
+        if adress_field_add_order.value != '':
+            adress_field_add_order.error_text = None
+            fdb.add_order(adress_field_add_order.value)
+            adress_field_add_order.value = ''
+            close_alert_new_order_dlg('')
+        else:
+            adress_field_add_order.error_text = 'Напишите для начала адрес заявки'
+        page.update()
+
     adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите город и адрес')
-    reqs_accept_order = ft.Dropdown(width=250,label='Заявки', hint_text='Выберите заявку')
+    reqs_accept_order_options = []
+    reqs_accept_order = ft.Dropdown(options=reqs_accept_order_options,label='Заявки', hint_text='Выберите заявку')
     installers_info = []
     installs = ft.Column(installers_info)
 
@@ -280,13 +296,13 @@ def main(page: ft.Page):
         modal=True,
         title = ft.Text('Фиксирование заявки'),
         content=adress_field_add_order,
-        actions=[ft.TextButton('Зафиксировать', on_click=close_alert_new_order_dlg), ft.TextButton('Отмена', on_click=close_alert_new_order_dlg)]
+        actions=[ft.TextButton('Зафиксировать', on_click=add_order_func), ft.TextButton('Отмена', on_click=close_alert_new_order_dlg)]
     )
 
     accept_order_dialog = ft.AlertDialog(
         modal=True,
         title=ft.Text('Принятие заявки'),
-        content=reqs_accept_order,
+        content=ft.Container(content=reqs_accept_order, width=page.width),
         actions=[ft.TextButton('Принять', on_click=close_alert_accept_order_dlg),
                  ft.TextButton('Отмена', on_click=close_alert_accept_order_dlg)]
     )
