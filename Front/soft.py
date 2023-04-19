@@ -58,7 +58,11 @@ def main(page: ft.Page):
 
 
             if not brak:
+                page.client_storage.clear()
                 ok = fdb.sign_in((login.value,password.value))
+                page.client_storage.set('loged',True)
+                page.client_storage.set('login',login.value)
+
                 if not ok:
                     send_banner('Неверный логин/пароль')
                 if ok:
@@ -96,7 +100,11 @@ def main(page: ft.Page):
 
 
             if not brak:
+                page.client_storage.clear()
                 ok = fdb.sign_up((login.value,password.value,role_choose.value))
+                page.client_storage.set('loged',True)
+                page.client_storage.set('login',login.value)
+                page.client_storage.set('role',role_choose.value)
                 password.value = ''
                 login.value = ''
                 role_choose.value = None
@@ -140,7 +148,9 @@ def main(page: ft.Page):
         login_screen_content.height = page.height
         page.update()
 
-
+    def exit_btn(e):
+        page.client_storage.clear()
+        page.go('/login')
     def route_change(route):
         page.views.clear()
         if page.route == '/' or page.route == '/login':
@@ -160,7 +170,7 @@ def main(page: ft.Page):
                 ft.View(
                     '/soft',
                     [
-                        ft.ElevatedButton('Exit',on_click=lambda _:page.go('/login'))
+                        ft.ElevatedButton('Exit',on_click=exit_btn)
                     ]
                 )
             )
@@ -170,7 +180,10 @@ def main(page: ft.Page):
         top_view = page.views[-1]
         page.go(top_view.route)
 
-
+    if page.client_storage.get('loged'):
+        page.go('/soft')
+    else:
+        page.go('/login')
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.go(page.route)
