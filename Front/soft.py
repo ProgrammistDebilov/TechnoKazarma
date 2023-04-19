@@ -98,7 +98,7 @@ def main(page: ft.Page):
                             soft_main_list_content.remove(add_new_order_btn)
                         except:
                             pass
-                    else:
+                    elif page.client_storage.get('role') == 'Диспетчер':
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
                     page.update()
@@ -154,6 +154,15 @@ def main(page: ft.Page):
                         close_banner('')
                     except AttributeError:
                         pass
+                    if page.client_storage.get('role') == 'Инсталятор':
+                        try:
+                            soft_main_list_content.remove(add_new_order_btn)
+                        except:
+                            pass
+                    elif page.client_storage.get('role') == 'Диспетчер':
+                        if add_new_order_btn not in soft_main_list_content:
+                            soft_main_list_content.append(add_new_order_btn)
+
                     page.go('/soft')
 
 
@@ -287,7 +296,7 @@ def main(page: ft.Page):
                 soft_main_list_content.remove(add_new_order_btn)
             except:
                 pass
-        else:
+        elif page.client_storage.get('role') == 'Диспетчер':
             if add_new_order_btn not in soft_main_list_content:
                 soft_main_list_content.append(add_new_order_btn)
         page.update()
