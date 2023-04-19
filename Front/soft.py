@@ -78,8 +78,10 @@ def main(page: ft.Page):
 
 
             if not brak:
+                enter_btn.disabled = True
                 ok = fdb.sign_in((login.value,password.value))
                 if not ok:
+                    enter_btn.disabled = False
                     send_banner('Неверный логин/пароль')
                 if ok:
                     page.client_storage.clear()
@@ -101,8 +103,22 @@ def main(page: ft.Page):
                     elif page.client_storage.get('role') == 'Диспетчер':
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
+                    installers_info.clear()
+                    for i in fdb.return_installers():
+                        icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
+                        if i.get('alacrity') == 1:
+                            icon.color = ft.colors.GREEN
+                        else:
+                            icon.color = ft.colors.RED
+                        installers_info.append(
+                            ft.ListTile(
+                                leading=icon,
+                                title=ft.Text(i.get('login'))
+                            )
+                        )
                     page.update()
                     page.go('/soft')
+                    enter_btn.disabled = False
 
         else:#регистрация
             brak = False
@@ -133,6 +149,7 @@ def main(page: ft.Page):
 
             if not brak:
                 ok = 0
+                enter_btn.disabled = True
                 if role_choose.value != 'Инсталятор':
                     ok = fdb.sign_up((login.value, password.value, role_choose.value))
                 elif role_choose.value == 'Инсталятор':
@@ -141,6 +158,7 @@ def main(page: ft.Page):
                     ok = fdb.sign_up((login.value, password.value, role_choose.value,size[1],size[0] ))
                 if not ok:
                     send_banner('Логин уже занят')
+                    enter_btn.disabled = False
                 if ok:
                     page.client_storage.clear()
                     page.client_storage.set('loged', True)
@@ -163,10 +181,26 @@ def main(page: ft.Page):
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
 
+                    installers_info.clear()
+                    for i in fdb.return_installers():
+                        icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
+                        if i.get('alacrity') == 1:
+                            icon.color = ft.colors.GREEN
+                        else:
+                            icon.color = ft.colors.RED
+                        installers_info.append(
+                            ft.ListTile(
+                                leading=icon,
+                                title=ft.Text(i.get('login'))
+                            )
+                        )
                     page.go('/soft')
+                    enter_btn.disabled = False
 
 
-    Title = ft.Image(src='images/r1.png',width=page.width//20,fit=ft.ImageFit.CONTAIN)
+    #Title = ft.Image(src='images/r1.png',width=page.width//20,fit=ft.ImageFit.CONTAIN)
+    #Title = ft.Text('РОСТЕЛЕКОМ', size=page.width//20, color='#7C4DFF')
+    Title = ft.Icon(ft.icons.WIFI, color='#7C4DFF', size=page.width//5)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
     password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF', password=True, can_reveal_password=True)
     role_choose = ft.Dropdown(
@@ -256,7 +290,7 @@ def main(page: ft.Page):
     #адаптивные размеры окон
     def change_size(e):
         login_screen_content.width = page.width
-        Title.width = page.width//25
+        Title.size = page.width//5
         login_screen_content.height = page.height
         down_bar.width = page.width
         soft_main_content.width = page.width
@@ -320,12 +354,14 @@ def main(page: ft.Page):
         elif page.client_storage.get('role') == 'Диспетчер':
             if add_new_order_btn not in soft_main_list_content:
                 soft_main_list_content.append(add_new_order_btn)
+        installers_info.clear()
         for i in fdb.return_installers():
             icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
             if i.get('alacrity') == 1:
                 icon.color = ft.colors.GREEN
             else:
                 icon.color = ft.colors.RED
+
             installers_info.append(
                 ft.ListTile(
                     leading=icon,
