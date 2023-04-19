@@ -160,15 +160,34 @@ def main(page: ft.Page):
     t= ft.Column(login_content,alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     login_screen_content = ft.Container(content=t,width=page.width,height=page.height, alignment=ft.alignment.center)
 
+
+
+
+
+
+    ######Main content
+    def exit_btn(e):
+        page.client_storage.clear()
+        page.go('/login')
+    exit = ft.IconButton('Exit',on_click=exit_btn)
+    dow_bar_content = ft.Row([exit])
+    down_bar = ft.Container(content=,width=page.width,height=100, bgcolor='#B388FF', alignment=ft.alignment.center)
+    soft_main_content = ft.Container(width=page.width, height=page.height - down_bar.height)
+    soft_colummn_main = ft.Column([soft_main_content,down_bar])
+    soft_screen_content = ft.Container(content=soft_colummn_main, width=page.width,height=page.height)
+
+
     #адаптивные размеры окон
     def change_size(e):
         login_screen_content.width = page.width
         login_screen_content.height = page.height
+        down_bar.width = page.width
+        soft_screen_content.width = page.width
+        soft_screen_content.height = page.height
         page.update()
 
-    def exit_btn(e):
-        page.client_storage.clear()
-        page.go('/login')
+
+
     def route_change(route):
         page.views.clear()
         if page.route == '/' or page.route == '/login':
@@ -188,7 +207,7 @@ def main(page: ft.Page):
                 ft.View(
                     '/soft',
                     [
-                        ft.ElevatedButton('Exit',on_click=exit_btn)
+                        soft_screen_content
                     ]
                 )
             )
