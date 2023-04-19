@@ -20,6 +20,13 @@ def main(page: ft.Page):
                     is_exist_acc.value = False
                     is_exist_acc_change('')
                     page.update()
+        if page.route == '/soft':
+            match e.key:
+                case 'Escape' if add_order_dialog.open == True:
+                    close_alert_new_order_dlg('')
+                case 'Enter' if add_order_dialog.open == True:
+                    close_alert_new_order_dlg('')
+
 
 
     def close_banner(e):
@@ -100,7 +107,13 @@ def main(page: ft.Page):
                             soft_main_list_content.remove(add_new_order_btn)
                         except:
                             pass
+                        if accept_order_btn not in soft_main_list_content:
+                            soft_main_list_content.append(accept_order_btn)
                     elif page.client_storage.get('role') == 'Диспетчер':
+                        try:
+                            soft_main_list_content.remove(accept_order_btn)
+                        except:
+                            pass
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
                     installers_info.clear()
@@ -177,9 +190,16 @@ def main(page: ft.Page):
                             soft_main_list_content.remove(add_new_order_btn)
                         except:
                             pass
+                        if accept_order_btn not in soft_main_list_content:
+                            soft_main_list_content.append(accept_order_btn)
                     elif page.client_storage.get('role') == 'Диспетчер':
+                        try:
+                            soft_main_list_content.remove(accept_order_btn)
+                        except:
+                            pass
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
+
 
                     installers_info.clear()
                     for i in fdb.return_installers():
@@ -234,32 +254,42 @@ def main(page: ft.Page):
         page.client_storage.clear()
         page.go('/login')
 
-    def close_alert_dlg(e):
+    def close_alert_new_order_dlg(e):
         add_order_dialog.open = False
         page.update()
-    def open_alert_dlg(e):
+    def open_alert_new_order_dlg(e):
         page.dialog = add_order_dialog
         add_order_dialog.open = True
         page.update()
 
+    def close_alert_accept_order_dlg(e):
+        accept_order_dialog.open = False
+        page.update()
+
+    def open_alert_accept_order_dlg(e):
+        page.dialog = accept_order_dialog
+        accept_order_dialog.open = True
+        page.update()
+
     adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите город и адрес')
-    installers_alert = ft.Dropdown()
+    reqs_accept_order = ft.Dropdown(width=250,label='Заявки', hint_text='Выберите заявку')
     installers_info = []
     installs = ft.Column(installers_info)
+
     add_order_dialog = ft.AlertDialog(
         modal=True,
-        title = ft.Text('Зафиксировать заявку'),
-        content=ft.Container(
-            alignment=ft.alignment.center,
-            content=ft.Column(
-                [
-                adress_field_add_order,
-                installers_alert
-                ]
-            )
-        ),actions=[ft.TextButton('Зафиксировать', on_click=close_alert_dlg), ft.TextButton('Отмена', on_click=close_alert_dlg)]
+        title = ft.Text('Фиксирование заявки'),
+        content=adress_field_add_order,
+        actions=[ft.TextButton('Зафиксировать', on_click=close_alert_new_order_dlg), ft.TextButton('Отмена', on_click=close_alert_new_order_dlg)]
     )
 
+    accept_order_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text('Принятие заявки'),
+        content=reqs_accept_order,
+        actions=[ft.TextButton('Принять', on_click=close_alert_accept_order_dlg),
+                 ft.TextButton('Отмена', on_click=close_alert_accept_order_dlg)]
+    )
 
     #Нижняя панель
     exit = ft.IconButton(icon=ft.icons.EXIT_TO_APP,on_click=exit_btn, icon_color='#6200EA',icon_size=20)
@@ -271,8 +301,10 @@ def main(page: ft.Page):
 
 
     show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : page.launch_url("https://geotest.tiiny.site"))
-    add_new_order_btn = ft.ElevatedButton('Зафиксировать заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_dlg)
-    soft_main_list_content = [show_map_btn,add_new_order_btn]
+    add_new_order_btn = ft.ElevatedButton('Зафиксировать заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_new_order_dlg)
+    accept_order_btn = ft.ElevatedButton('Принять заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_accept_order_dlg)
+
+    soft_main_list_content = [show_map_btn,add_new_order_btn,accept_order_btn]
 
 
     soft_main_content = ft.Column(soft_main_list_content, alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
@@ -351,7 +383,13 @@ def main(page: ft.Page):
                 soft_main_list_content.remove(add_new_order_btn)
             except:
                 pass
+            if accept_order_btn not in soft_main_list_content:
+                soft_main_list_content.append(accept_order_btn)
         elif page.client_storage.get('role') == 'Диспетчер':
+            try:
+                soft_main_list_content.remove(accept_order_btn)
+            except:
+                pass
             if add_new_order_btn not in soft_main_list_content:
                 soft_main_list_content.append(add_new_order_btn)
         installers_info.clear()
