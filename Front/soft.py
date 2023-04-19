@@ -170,6 +170,32 @@ def main(page: ft.Page):
     def exit_btn(e):
         page.client_storage.clear()
         page.go('/login')
+
+    def close_alert_dlg(e):
+        add_order_dialog.open = False
+        page.update()
+    def open_alert_dlg(e):
+        page.dialog = add_order_dialog
+        add_order_dialog.open = True
+        page.update()
+
+    adress_field_add_order = ft.TextField(width=100,label='Адрес заявки', hint_text='Напишите адрес заявки')
+    installers = ft.Dropdown()
+    add_order_dialog = ft.AlertDialog(
+        modal=True,
+        title = ft.Text('Зафиксировать заявку'),
+        content=ft.Container(
+            alignment=ft.alignment.center,
+            content=ft.Column(
+                [
+                adress_field_add_order,
+                installers
+                ]
+            )
+        ),actions=[ft.TextButton('Зафиксировать', on_click=close_alert_dlg), ft.TextButton('Отмена', on_click=close_alert_dlg)]
+    )
+
+
     #Нижняя панель
     exit = ft.IconButton(icon=ft.icons.EXIT_TO_APP,on_click=exit_btn, icon_color='#6200EA',icon_size=20)
     down_bar_content = ft.Row([exit],  alignment=ft.MainAxisAlignment.CENTER)
