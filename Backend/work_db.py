@@ -51,12 +51,13 @@ def sign_in(options):
 
 
 def add_order(adress, installer):
-
     con = sql3.connect('Installs.db')
     cur = con.cursor()
-    alacrity = cur.execute(f'SELECT alacrity FROM installers WHERE username = {installer}').fetchall()
+
+    alacrity = cur.execute(f'SELECT alacrity FROM installers WHERE username = {installer}').fetchall()[0][0]
+    print(alacrity)
     if alacrity == 1:
-        cur.execute(f'INSERT INTO orders (adress, installer) VALUES ({adress}, {installer})')
+        cur.execute(f'INSERT INTO orders (adress, installer) VALUES ("{adress}", {installer})')
 
     con.commit()
 
@@ -77,4 +78,5 @@ options_all = [123, 123, 'Инсталятор', 'test', 'test']
 if __name__ == '__main__':
     # sign_in(options)
     # sign_up(options_all)
-    return_aval_in()
+    # return_aval_in()
+    add_order('ул. Путина 36', '123')
