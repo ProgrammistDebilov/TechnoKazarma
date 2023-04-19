@@ -1,8 +1,25 @@
 import flet as ft
-import sys
-print(sys.path)
+
 import Backend.work_db as fdb
 def main(page: ft.Page):
+    def keyboard_shortcuts(e:ft.KeyboardEvent):
+        if page.route == '/login':
+            match e.key:
+                case 'Enter':
+                    enter_btn_action('')
+                case '\\':
+                    is_exist_acc.value = not is_exist_acc.value
+                    is_exist_acc_change('')
+                    is_exist_acc.update()
+                case 'Delete':
+                    login.value = ''
+                    password.value = ''
+                    role_choose.value = None
+                    is_exist_acc.value = False
+                    is_exist_acc_change('')
+                    page.update()
+
+
     def close_banner(e):
         page.banner.open = False
         page.update()
@@ -59,7 +76,11 @@ def main(page: ft.Page):
 
 
             if not brak:
+                page.client_storage.clear()
                 ok = fdb.sign_in((login.value,password.value))
+                page.client_storage.set('loged',True)
+                page.client_storage.set('login',login.value)
+
                 if not ok:
                     send_banner('Неверный логин/пароль')
                 if ok:
@@ -97,7 +118,11 @@ def main(page: ft.Page):
 
 
             if not brak:
+                page.client_storage.clear()
                 ok = fdb.sign_up((login.value,password.value,role_choose.value))
+                page.client_storage.set('loged',True)
+                page.client_storage.set('login',login.value)
+                page.client_storage.set('role',role_choose.value)
                 password.value = ''
                 login.value = ''
                 role_choose.value = None
@@ -113,7 +138,7 @@ def main(page: ft.Page):
 
     Title = ft.Image(src='/images/r_logo.png',width=150,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
-    password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF')
+    password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF', password=True, can_reveal_password=True)
     role_choose = ft.Dropdown(
         label='Роль',
         width=155,
@@ -141,7 +166,9 @@ def main(page: ft.Page):
         login_screen_content.height = page.height
         page.update()
 
-
+    def exit_btn(e):
+        page.client_storage.clear()
+        page.go('/login')
     def route_change(route):
         page.views.clear()
         if page.route == '/' or page.route == '/login':
@@ -161,7 +188,7 @@ def main(page: ft.Page):
                 ft.View(
                     '/soft',
                     [
-                        ft.ElevatedButton('Exit',on_click=lambda _:page.go('/login'))
+                        ft.ElevatedButton('Exit',on_click=exit_btn)
                     ]
                 )
             )
@@ -171,9 +198,13 @@ def main(page: ft.Page):
         top_view = page.views[-1]
         page.go(top_view.route)
 
-
+    if page.client_storage.get('loged'):
+        page.go('/soft')
+    else:
+        page.go('/login')
     page.on_route_change = route_change
     page.on_view_pop = view_pop
+    page.on_keyboard_event = keyboard_shortcuts
     page.go(page.route)
     page.theme_mode = 'DARK'
     page.on_resize = change_size
