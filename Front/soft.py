@@ -175,12 +175,15 @@ def main(page: ft.Page):
     down_bar = ft.Container(content=down_bar_content,width=page.width,height=60, bgcolor='#B388FF', alignment=ft.alignment.top_center)
 
 
+    show_map_btn = ft.ElevatedButton('Открыть карту', width=200,height=50, bgcolor='#ff4f12', color=ft.colors.WHITE)
+    soft_main_list_content = [show_map_btn]
 
-    soft_main_content = ft.Container(width=page.width, height=page.height - down_bar.height)
+    soft_main_content = ft.Column(soft_main_list_content, alignment=ft.MainAxisAlignment.CENTER)
+    soft_main_window = ft.Container(content=soft_main_content,width=page.width, height=page.height - down_bar.height, alignment=ft.alignment.center)
 
 
 
-    soft_colummn_main = ft.Column([soft_main_content,down_bar])
+    soft_colummn_main = ft.Column([soft_main_window,down_bar])
     soft_screen_content = ft.Container(content=soft_colummn_main, width=page.width,height=page.height)
 
 
@@ -189,6 +192,8 @@ def main(page: ft.Page):
         login_screen_content.width = page.width
         login_screen_content.height = page.height
         down_bar.width = page.width
+        soft_main_content.width = page.width
+        soft_main_content.height = page.height - down_bar.height
         soft_screen_content.width = page.width
         soft_screen_content.height = page.height
         page.update()
