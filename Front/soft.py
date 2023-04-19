@@ -78,18 +78,29 @@ def main(page: ft.Page):
 
 
             if not brak:
-                page.client_storage.clear()
                 ok = fdb.sign_in((login.value,password.value))
-                page.client_storage.set('loged',True)
-                page.client_storage.set('login',login.value)
-
                 if not ok:
                     send_banner('Неверный логин/пароль')
                 if ok:
+                    page.client_storage.clear()
+                    page.client_storage.set('loged', True)
+                    page.client_storage.set('login', login.value)
+                    page.client_storage.set('role', fdb.return_role(login.value))
+                    login.value = ''
+                    password.value = ''
                     try:
                         close_banner('')
                     except AttributeError:
                         pass
+                    if page.client_storage.get('role') == 'Инсталятор':
+                        try:
+                            soft_main_list_content.remove(add_new_order_btn)
+                        except:
+                            pass
+                    else:
+                        if add_new_order_btn not in soft_main_list_content:
+                            soft_main_list_content.append(add_new_order_btn)
+                    page.update()
                     page.go('/soft')
 
         else:#регистрация
@@ -120,17 +131,24 @@ def main(page: ft.Page):
 
 
             if not brak:
-                page.client_storage.clear()
-                ok = fdb.sign_up((login.value,password.value,role_choose.value))
-                page.client_storage.set('loged',True)
-                page.client_storage.set('login',login.value)
-                page.client_storage.set('role',role_choose.value)
-                password.value = ''
-                login.value = ''
-                role_choose.value = None
+                ok = 0
+                if role_choose.value != 'Инсталятор':
+                    ok = fdb.sign_up((login.value, password.value, role_choose.value))
+                elif role_choose.value == 'Инсталятор':
+                    size = gps.get_loc()
+                    print(size)
+                    ok = fdb.sign_up((login.value, password.value, role_choose.value,size[1],size[0] ))
                 if not ok:
                     send_banner('Логин уже занят')
                 if ok:
+                    page.client_storage.clear()
+                    page.client_storage.set('loged', True)
+                    page.client_storage.set('login', login.value)
+                    page.client_storage.set('role', role_choose.value)
+
+                    password.value = ''
+                    login.value = ''
+                    role_choose.value = None
                     try:
                         close_banner('')
                     except AttributeError:
@@ -138,7 +156,7 @@ def main(page: ft.Page):
                     page.go('/soft')
 
 
-    Title = ft.Image(src='/images/r_logo.png',width=page.width//25,fit=ft.ImageFit.CONTAIN)
+    Title = ft.Image(src='images/r1.png',width=page.width//20,fit=ft.ImageFit.CONTAIN)
     login = ft.TextField(label='Логин', hint_text='Введите ваш логин',width=300,focused_border_color='#7C4DFF')
     password = ft.TextField(label='Пароль', hint_text='Введите ваш пароль',width=300,focused_border_color='#7C4DFF', password=True, can_reveal_password=True)
     role_choose = ft.Dropdown(
@@ -263,6 +281,15 @@ def main(page: ft.Page):
         page.go(top_view.route)
 
     if page.client_storage.get('loged'):
+        if page.client_storage.get('role') == 'Инсталятор':
+            try:
+                soft_main_list_content.remove(add_new_order_btn)
+            except:
+                pass
+        else:
+            if add_new_order_btn not in soft_main_list_content:
+                soft_main_list_content.append(add_new_order_btn)
+        page.update()
         page.go('/soft')
     else:
         page.go('/login')
