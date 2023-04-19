@@ -166,9 +166,26 @@ def main(page: ft.Page):
 
 
     ######Main content
+
     def exit_btn(e):
         page.client_storage.clear()
         page.go('/login')
+
+    adress_field_add_order = ft.TextField(width=100,label='Адрес заявки', hint_text='Напишите адрес заявки')
+    add_order_dialog = ft.AlertDialog(
+        modal=True,
+        title = ft.Text('Зафиксировать заявку'),
+        content=ft.Container(
+            alignment=ft.alignment.center,
+            content=ft.Column(
+                [
+                adress_field_add_order
+                ]
+            )
+        ),
+    )
+
+
     #Нижняя панель
     exit = ft.IconButton(icon=ft.icons.EXIT_TO_APP,on_click=exit_btn, icon_color='#6200EA',icon_size=20)
     down_bar_content = ft.Row([exit],  alignment=ft.MainAxisAlignment.CENTER)
