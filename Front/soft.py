@@ -177,7 +177,7 @@ def main(page: ft.Page):
         page.update()
     def open_alert_dlg(e):
         page.dialog = add_order_dialog
-        print(gps.get_loc())
+
         add_order_dialog.open = True
         page.update()
 
