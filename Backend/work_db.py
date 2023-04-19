@@ -93,7 +93,7 @@ def return_location(login):
     cur.execute(f'SELECT width, length FROM installers WHERE username = "{str(login)}"')
     loc = cur.fetchall()[0]
     con.commit()
-    print(loc)
+    return loc
 
 def return_role(login):
     con = sql3.connect(db_path)
@@ -138,8 +138,8 @@ if __name__ == '__main__':
     # sign_up(options_all)
     # return_aval_in()
     # add_order('ул. Путина 36', '123', '12.30')
-    # return_location('fgh')
+    print(return_location('fgh'))
     # return_role('123')
     # insert_location(123, 23.567, 45.432)
-    finish_order(123, '13.45')
-    return_installers()
+    # finish_order(123, '13.45')
+    # return_installers()
