@@ -98,7 +98,6 @@ def return_location(login):
     print(loc)
 
 def return_role(login):
-    print(login)
     con = sql3.connect(db_path)
     cur = con.cursor()
 
@@ -120,6 +119,19 @@ def insert_location(login, width, length):
     cur.execute(f'UPDATE installers SET width = {width}, length = {length} WHERE username = {str(login)}')
     con.commit()
 
+def return_installers():
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'SELECT username, alacrity FROM installers')
+    installers_db = cur.fetchall()
+    installers = []
+    for i in installers_db:
+        installer_d = {'login' : i[0], 'alacrity' : i[1]}
+        installers.append(installer_d)
+
+    print(installers)
+
 options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 
@@ -132,4 +144,4 @@ if __name__ == '__main__':
     # return_role('123')
     # insert_location(123, 23.567, 45.432)
     # finish_order(123)
-    return_role(123)
+    return_installers()
