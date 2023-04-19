@@ -50,29 +50,31 @@ def sign_in(options):
         return 0#неверные данные
 
 def add_order(adress, installer):
-    con = sql3.connect('Installs.db')
+    con = sql3.connect(db_path)
     cur = con.cursor()
 
     alacrity = cur.execute(f'SELECT alacrity FROM installers WHERE username = {installer}').fetchall()[0][0]
     if alacrity == 1:
         cur.execute(f'INSERT INTO orders (adress, installer) VALUES ("{str(adress)}", {str(installer)})')
-    cur.execute(f'UPDATE installers SET alacrity = 0 WHERE username = {installer}')
+    cur.execute(f'UPDATE installers SET alacrity = 0 WHERE username = {str(installer)}')
 
     con.commit()
 
 
 
 def finish_order(installer):
-    con = sql3.connect('Installs.db')
+    con = sql3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute(f'DELETE * FROM orders WHERE installer = {installer}')
+    cur.execute(f'DELETE FROM orders WHERE installer = {str(installer)}')
+    con.commit()
+
+    cur.execute(f'UPDATE installers SET alacrity = 1 WHERE username = {str(installer)}')
     con.commit()
 
 
-
 def return_aval_in():
-    con = sql3.connect('Installs.db')
+    con = sql3.connect(db_path)
     cur = con.cursor()
 
     cur.execute('SELECT username FROM installers WHERE alacrity = 1')
@@ -87,7 +89,7 @@ def return_aval_in():
 
 
 def return_location(login):
-    con = sql3.connect('Installs.db')
+    con = sql3.connect(db_path)
     cur = con.cursor()
 
     cur.execute(f'SELECT width, length FROM installers WHERE username = "{str(login)}"')
@@ -96,7 +98,7 @@ def return_location(login):
     print(loc)
 
 def return_role(login):
-    con = sql3.connect('Installs.db')
+    con = sql3.connect(db_path)
     cur = con.cursor()
 
     cur.execute(f'SELECT role FROM users WHERE login = {str(login)}')
@@ -111,11 +113,24 @@ def return_role(login):
     return role_ru
 
 def insert_location(login, width, length):
-    con = sql3.connect('Installs.db')
+    con = sql3.connect(db_path)
     cur = con.cursor()
 
     cur.execute(f'UPDATE installers SET width = {width}, length = {length} WHERE username = {str(login)}')
     con.commit()
+
+def return_installers():
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'SELECT username, alacrity FROM installers')
+    installers_db = cur.fetchall()
+    installers = []
+    for i in installers_db:
+        installer_d = {'login' : i[0], 'alacrity' : i[1]}
+        installers.append(installer_d)
+
+    print(installers)
 
 options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
@@ -123,8 +138,10 @@ options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 if __name__ == '__main__':
     # sign_in(options)
     # sign_up(options_all)
-    return_aval_in()
-    add_order('ул. Путина 36', '123')
-    return_location('fgh')
+    # return_aval_in()
+    # add_order('ул. Путина 36', '123')
+    # return_location('fgh')
     # return_role('123')
     # insert_location(123, 23.567, 45.432)
+    # finish_order(123)
+    return_installers()
