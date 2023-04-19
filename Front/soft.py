@@ -229,7 +229,9 @@ def main(page: ft.Page):
 
     #Нижняя панель
     exit = ft.IconButton(icon=ft.icons.EXIT_TO_APP,on_click=exit_btn, icon_color='#6200EA',icon_size=20)
-    down_bar_content = ft.Row([exit],  alignment=ft.MainAxisAlignment.CENTER)
+    installers_page = ft.IconButton(icon=ft.icons.BUILD_OUTLINED,on_click=lambda _:page.go('/installers'), icon_color='#6200EA',icon_size=20)
+    home_page = ft.IconButton(icon=ft.icons.HOME_OUTLINED,on_click=lambda _:page.go('/soft'), icon_color='#6200EA',icon_size=20)
+    down_bar_content = ft.Row([installers_page,home_page,exit],  alignment=ft.MainAxisAlignment.CENTER)
     down_bar = ft.Container(content=down_bar_content,width=page.width,height=60, bgcolor='#B388FF', alignment=ft.alignment.top_center)
 
 
@@ -247,6 +249,9 @@ def main(page: ft.Page):
     soft_colummn_main = ft.Column([soft_main_window,down_bar])
     soft_screen_content = ft.Container(content=soft_colummn_main, width=page.width,height=page.height)
 
+    installers_screen_row_main = ft.Row([ft.Card(content=installs,width=400)], alignment=ft.MainAxisAlignment.CENTER)
+    installers_screen_content = ft.Container(content=installers_screen_row_main, width=page.width,height=page.height-down_bar.height)
+
 
     #адаптивные размеры окон
     def change_size(e):
@@ -258,6 +263,8 @@ def main(page: ft.Page):
         soft_main_window.height = page.height - down_bar.height
         soft_main_window.width = page.width
         soft_screen_content.height = page.height
+        installers_screen_content.height = page.height - down_bar.height
+        installers_screen_content.width = page.width
         page.update()
 
 
@@ -282,8 +289,19 @@ def main(page: ft.Page):
                 ft.View(
                     '/soft',
                     [
-                        # soft_screen_content
-                        ft.Row([ft.Card(content=installs,width=400)], alignment=ft.MainAxisAlignment.CENTER)
+                        soft_screen_content
+
+                    ]
+                )
+            )
+        if page.route == '/installers':
+            page.title = 'Работяги'
+            page.views.append(
+                ft.View(
+                    '/installers',
+                    [
+                        installers_screen_content,
+                        down_bar
                     ]
                 )
             )
