@@ -2,6 +2,7 @@ import flet as ft
 import webbrowser
 import os
 import Backend.work_db as fdb
+import Backend.location as gps
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
@@ -176,6 +177,7 @@ def main(page: ft.Page):
         page.update()
     def open_alert_dlg(e):
         page.dialog = add_order_dialog
+        print(gps.get_loc())
         add_order_dialog.open = True
         page.update()
 
