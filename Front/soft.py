@@ -85,6 +85,7 @@ def main(page: ft.Page):
                     page.client_storage.clear()
                     page.client_storage.set('loged', True)
                     page.client_storage.set('login', login.value)
+
                     page.client_storage.set('role', fdb.return_role(login.value))
                     login.value = ''
                     password.value = ''
