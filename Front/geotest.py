@@ -21,7 +21,7 @@ for i in range(1000):
     i = random.randint(-90.000000000,90.000000000)
     j = random.randint(-720.000000000,720.000000000)
     randomdata.append((i,j))
-    folium.Marker([i,j], popup="<b>Timberline Lodge</b>").add_to(m)
+    folium.Marker([i,j], popup="<b>Test dot</b>").add_to(m)
     
 
 #longatt= str(location.latitude)+","+str(location.longitude)
