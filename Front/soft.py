@@ -98,7 +98,7 @@ def main(page: ft.Page):
                             soft_main_list_content.remove(add_new_order_btn)
                         except:
                             pass
-                    else:
+                    elif page.client_storage.get('role') == 'Диспетчер':
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
                     page.update()
@@ -154,6 +154,15 @@ def main(page: ft.Page):
                         close_banner('')
                     except AttributeError:
                         pass
+                    if page.client_storage.get('role') == 'Инсталятор':
+                        try:
+                            soft_main_list_content.remove(add_new_order_btn)
+                        except:
+                            pass
+                    elif page.client_storage.get('role') == 'Диспетчер':
+                        if add_new_order_btn not in soft_main_list_content:
+                            soft_main_list_content.append(add_new_order_btn)
+
                     page.go('/soft')
 
 
@@ -200,7 +209,9 @@ def main(page: ft.Page):
         page.update()
 
     adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите город и адрес')
-    installers = ft.Dropdown()
+    installers_alert = ft.Dropdown()
+    installers_info = []
+    installs = ft.Column(installers_info)
     add_order_dialog = ft.AlertDialog(
         modal=True,
         title = ft.Text('Зафиксировать заявку'),
@@ -209,7 +220,7 @@ def main(page: ft.Page):
             content=ft.Column(
                 [
                 adress_field_add_order,
-                installers
+                installers_alert
                 ]
             )
         ),actions=[ft.TextButton('Зафиксировать', on_click=close_alert_dlg), ft.TextButton('Отмена', on_click=close_alert_dlg)]
@@ -223,7 +234,7 @@ def main(page: ft.Page):
 
 
 
-    show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : page.launch_url("https://google.com"))
+    show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : page.launch_url("https://geotest.tiiny.site"))
     add_new_order_btn = ft.ElevatedButton('Зафиксировать заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_dlg)
     soft_main_list_content = [show_map_btn,add_new_order_btn]
 
@@ -271,7 +282,8 @@ def main(page: ft.Page):
                 ft.View(
                     '/soft',
                     [
-                        soft_screen_content
+                        # soft_screen_content
+                        ft.Row([ft.Card(content=installs,width=400)], alignment=ft.MainAxisAlignment.CENTER)
                     ]
                 )
             )
@@ -287,9 +299,21 @@ def main(page: ft.Page):
                 soft_main_list_content.remove(add_new_order_btn)
             except:
                 pass
-        else:
+        elif page.client_storage.get('role') == 'Диспетчер':
             if add_new_order_btn not in soft_main_list_content:
                 soft_main_list_content.append(add_new_order_btn)
+        for i in fdb.return_installers():
+            icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
+            if i.get('alacrity') == 1:
+                icon.color = ft.colors.GREEN
+            else:
+                icon.color = ft.colors.RED
+            installers_info.append(
+                ft.ListTile(
+                    leading=icon,
+                    title=ft.Text(i.get('login'))
+                )
+            )
         page.update()
         page.go('/soft')
     else:
