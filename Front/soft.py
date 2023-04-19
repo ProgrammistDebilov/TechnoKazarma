@@ -1,5 +1,6 @@
 import flet as ft
 import webbrowser
+import os
 import Backend.work_db as fdb
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
@@ -166,40 +167,17 @@ def main(page: ft.Page):
 
 
     ######Main content
-
     def exit_btn(e):
         page.client_storage.clear()
         page.go('/login')
-
-    adress_field_add_order = ft.TextField(width=100,label='Адрес заявки', hint_text='Напишите адрес заявки')
-    add_order_dialog = ft.AlertDialog(
-        modal=True,
-        title = ft.Text('Зафиксировать заявку'),
-        content=ft.Container(
-            alignment=ft.alignment.center,
-            content=ft.Column(
-                [
-                adress_field_add_order
-                ]
-            )
-        ),
-    )
-
-
     #Нижняя панель
     exit = ft.IconButton(icon=ft.icons.EXIT_TO_APP,on_click=exit_btn, icon_color='#6200EA',icon_size=20)
     down_bar_content = ft.Row([exit],  alignment=ft.MainAxisAlignment.CENTER)
     down_bar = ft.Container(content=down_bar_content,width=page.width,height=60, bgcolor='#B388FF', alignment=ft.alignment.top_center)
 
 
-<<<<<<< HEAD
-    show_map_btn = ft.ElevatedButton('Открыть карту', width=200,height=50, bgcolor='#ff4f12', color=ft.colors.WHITE, on_click=lambda _ : webbrowser.open("geo.html"))
+    show_map_btn = ft.ElevatedButton('Открыть карту', width=200,height=50, bgcolor='#ff4f12', color=ft.colors.WHITE, on_click=lambda _ : webbrowser.open('file://' + os.path.realpath("geo.html")))
     soft_main_list_content = [show_map_btn]
-=======
-    show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE)
-    add_new_order_btn = ft.ElevatedButton('Зафиксировать заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE)
-    soft_main_list_content = [show_map_btn,add_new_order_btn]
->>>>>>> 97aa1bcd21f3fd777858009349b39556d16933f2
 
     soft_main_content = ft.Column(soft_main_list_content, alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     soft_main_window = ft.Container(content=soft_main_content,width=page.width, height=page.height - down_bar.height, alignment=ft.alignment.center)
