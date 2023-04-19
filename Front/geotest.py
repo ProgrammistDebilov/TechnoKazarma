@@ -10,11 +10,11 @@ m = folium.Map(zoom_control=200)
 
 
 # Initialize Nominatim API
-geolocator = Nominatim(user_agent="MyApp")
+# geolocator = Nominatim(user_agent="MyApp")
 
-geolocation = "Южно-Сахалинск Комсомольская 277"
+# geolocation = "Южно-Сахалинск Комсомольская 277"
 
-location = geolocator.geocode(geolocation)
+# location = geolocator.geocode(geolocation)
 randomdata= []
 
 for i in range(1000):
@@ -32,4 +32,5 @@ colormap = branca.colormap.LinearColormap(['blue', 'lime', 'red'],
                                           caption='Нарастание загруженности')
 colormap.add_to(m)
 m.save("geo.html")
-webbrowser.open("geo.html")
+def open():
+    webbrowser.open("geo.html")
