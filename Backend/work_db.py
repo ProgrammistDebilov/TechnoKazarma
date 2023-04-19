@@ -49,28 +49,63 @@ def sign_in(options):
         print('не круто')
         return 0#неверные данные
 
-def add_order(adress, installer, start_time):
+def add_order(adress):
     con = sql3.connect(db_path)
     cur = con.cursor()
 
-    alacrity = cur.execute(f'SELECT alacrity FROM installers WHERE username = {installer}').fetchall()[0][0]
-    if alacrity == 1:
-        cur.execute(f'INSERT INTO orders (adress, installer, state, start_time) VALUES ("{str(adress)}", {str(installer)}, 0, {str(start_time)})')
-    cur.execute(f'UPDATE installers SET alacrity = 0 WHERE username = {str(installer)}')
+    cur.execute(f'INSERT INTO orders (adress, state) VALUES ("{str(adress)}", -1)')
 
     con.commit()
+
+def start_order(installer, id, start_time):
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'UPDATE orders SET state = 0, installer = {str(installer)}, start_time = {str(start_time)} WHERE id = {id}')
+    con.commit()
+    cur.execute(f'UPDATE installers SET alacrity = 0 WHERE username = {str(installer)}')
+    con.commit()
+    print('good')
 
 def finish_order(installer, end_time):
     con = sql3.connect(db_path)
     cur = con.cursor()
-
-    cur.execute(f'UPDATE orders SET state = 1, end_time = {end_time} WHERE installer = {str(installer)}')
+    cur.execute(f'SELECT id FROM orders WHERE installer = {str(installer)} AND state = 0')
+    id = cur.fetchall()[0][0]
+    print(id)
+    cur.execute(f'UPDATE orders SET state = 1, end_time = {str(end_time)} WHERE installer = {str(installer)} and id = {id}')
     con.commit()
 
     cur.execute(f'UPDATE installers SET alacrity = 1 WHERE username = {str(installer)}')
     con.commit()
 
 
+def return_orders():
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'SELECT * FROM orders')
+    orders_all_db = cur.fetchall()
+    orders = []
+    for x in orders_all_db:
+        order_d = {'id' : x[0], 'adress' : x[1], 'installer' : x[2], 'state' : x[3], 'start_time' : x[4], 'end_time' : x[5]}
+        orders.append(order_d)
+    print(orders)
+    return orders
+
+def return_orders_n():
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'SELECT * FROM orders WHERE state = -1')
+    orders_db = cur.fetchall()
+    orders = []
+    for order in orders_db:
+        print(order)
+        order_d = {'id' : order[0], 'adress' : order[1]}
+        orders.append(order_d)
+    print(orders)
+    return orders
 def return_aval_in():
     con = sql3.connect(db_path)
     cur = con.cursor()
@@ -137,9 +172,12 @@ if __name__ == '__main__':
     # sign_in(options)
     # sign_up(options_all)
     # return_aval_in()
-    # add_order('ул. Путина 36', '123', '12.30')
+    # add_order('ул. Путина 36')
     # print(return_location('fgh'))
     # return_role('123')
     # insert_location(123, 23.5, 45.432)
-    # finish_order(123, '13.45')
-    print(return_installers())
+    # finish_order(123, '18.20')
+    # print(return_installers())
+    # start_order(123, 3, 14.50)
+    return_orders()
+    return_orders_n()
