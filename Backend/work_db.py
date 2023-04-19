@@ -121,11 +121,11 @@ def return_installers():
     con = sql3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute(f'SELECT username, alacrity FROM installers')
+    cur.execute(f'SELECT username, alacrity, width, length FROM installers')
     installers_db = cur.fetchall()
     installers = []
     for i in installers_db:
-        installer_d = {'login' : i[0], 'alacrity' : i[1]}
+        installer_d = {'login' : i[0], 'alacrity' : i[1], 'width' : i[2], 'length' : i[3]}
         installers.append(installer_d)
 
     return installers
@@ -138,8 +138,8 @@ if __name__ == '__main__':
     # sign_up(options_all)
     # return_aval_in()
     # add_order('ул. Путина 36', '123', '12.30')
-    print(return_location('fgh'))
+    # print(return_location('fgh'))
     # return_role('123')
-    # insert_location(123, 23.567, 45.432)
+    # insert_location(123, 23.5, 45.432)
     # finish_order(123, '13.45')
-    # return_installers()
+    print(return_installers())
