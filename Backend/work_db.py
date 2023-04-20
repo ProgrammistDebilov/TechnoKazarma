@@ -163,7 +163,7 @@ def return_installers():
     con = sql3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute(f'SELECT username, alacrity, width, length, rating FROM installers ORDER BY rating')
+    cur.execute(f'SELECT username, alacrity, width, length, rating FROM installers ORDER BY rating desc')
     installers_db = cur.fetchall()
     installers = []
     for i in installers_db:
@@ -171,16 +171,6 @@ def return_installers():
         installers.append(installer_d)
 
     return installers
-
-def return_id(adress):
-    con = sql3.connect(db_path)
-    cur = con.cursor()
-
-    cur.execute(f'SELECT id FROM orders WHERE adress = "{str(adress)}" AND state = -1')
-    id = cur.fetchall()[0][0]
-
-    return id
-
 
 def return_alacrity(login):
     con = sql3.connect(db_path)
@@ -205,4 +195,3 @@ options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 
 if __name__ == '__main__':
     print(return_installers())
-    update_adress(3, 'Ул. Ленина 1')
