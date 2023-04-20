@@ -17,7 +17,7 @@ for i in logins:
 # Define a list of marker positions to loop through
 markers = [TileLayer()]
 for i, j in enumerate(locations):
-    markers.append(Marker(id = str(i), position=list(j)))
+    markers.append(Marker(id = str(i), position=list(j), children=Tooltip(logins[i])))
 # Define a list of marker positions to loop through
 
 
@@ -42,10 +42,11 @@ def test(l):
 
 def update_marker_position(n):
     logins.clear()
+    locations.clear()
     for i in db.return_installers():
         logins.append(i['login'])
     for i in logins:
-        print(list(db.return_location(i)))
+        list(db.return_location(i))
     return login
 
 
