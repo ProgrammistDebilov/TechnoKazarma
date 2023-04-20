@@ -295,8 +295,8 @@ def main(page: ft.Page):
         page.update()
 
     def show_order_info(e):
-        print(e.controls)
-
+        index = orders_info.index(e.control)
+        print(orders_info_id[index])
     adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите город и адрес', focused_border_color='#7C4DFF')
     reqs_accept_order_options = []
     reqs_accept_order_options_id = []
