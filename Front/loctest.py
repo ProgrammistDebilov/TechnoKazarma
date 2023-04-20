@@ -11,7 +11,7 @@ logins = []
 locations = []
 returns = []
 login = "логин не передался"
-callbacks = [Output('text', 'children')]
+callbacks = [Output('text', 'position')]
 for i in db.return_installers():
         logins.append(i['login'])
 for i in logins:
@@ -39,7 +39,7 @@ app.layout = html.Div([
 ])
 
 for i in range(len(logins)):
-    callbacks.append(Output(str(i), "children"))
+    callbacks.append(Output(str(i), "position"))
 print(callbacks)
 # Define a callback to update the markers position
 
