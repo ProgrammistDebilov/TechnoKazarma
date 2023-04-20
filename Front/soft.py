@@ -343,7 +343,7 @@ def main(page: ft.Page):
             time_start = ft.Text(f"Время начала работ - {order.get('start_time')}")
             comment_start = ft.Text('Комментарий инсталятора:')
             comment = ft.Text(f"{order.get('comment')}")
-            order_info_dialog.actions = order_info_dlg_actions_base
+            order_info_dialog.actions = order_info_dlg_actions_bas e
         elif order.get('state') == 0:
             icon.color = ft.colors.YELLOW
             status.value = 'Выполняется'
