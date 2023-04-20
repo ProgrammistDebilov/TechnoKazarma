@@ -99,7 +99,7 @@ def return_order(id):
     cur.execute(f'SELECT * FROM orders WHERE id = {id}')
     order_db = cur.fetchall()[0]
     order = {'id' : order_db[0], 'adress' : order_db[1], 'installer' : order_db[2], 'state' : order_db[3], 'start_time' : order_db[4], 'end_time' : order_db[5], 'comment' : order_db[6]}
-    print(order)
+    # print(order)
     return order
 def return_orders_n():
     con = sql3.connect(db_path)
@@ -125,7 +125,7 @@ def return_aval_in():
     for i in installs:
         availible_installs.append(i[0])
 
-    print(availible_installs)
+    # print(availible_installs)
     return availible_installs
 
 
@@ -144,12 +144,12 @@ def return_role(login):
 
     cur.execute(f'SELECT role FROM users WHERE login = "{str(login)}"')
     role = cur.fetchall()[0][0]
-    print(role)
+    # print(role)
     if role == 'i':
         role_ru = 'Инсталятор'
     elif role == 'd':
         role_ru = 'Диспетчер'
-    print(role_ru)
+    # print(role_ru)
     con.commit()
     return role_ru
 
