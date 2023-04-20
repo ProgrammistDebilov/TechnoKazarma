@@ -301,7 +301,7 @@ def main(page: ft.Page):
         page.update()
 
 
-    edit_title_textfield = ft.TextField(label ='Изменить адрес', hint_text='Напишите новый адрес', width=200)
+    edit_title_textfield = ft.TextField(label ='Изменить адрес', hint_text='Напишите новый адрес', width=200, focused_border_color='#7C4DFF')
     def edit_title(e):
         fdb.update_adress(orders_info_id[index_edit], edit_title_textfield.value)
         edit_title_textfield.value = ''
@@ -374,7 +374,7 @@ def main(page: ft.Page):
 
     reqs_accept_order = ft.Dropdown(options=reqs_accept_order_options,label='Заявки', hint_text='Выберите заявку', focused_border_color='#7C4DFF')
 
-    order_commentary = ft.TextField()
+    order_commentary = ft.TextField(focused_border_color='#7C4DFF')
 
     installers_info = []
     orders_info = []
