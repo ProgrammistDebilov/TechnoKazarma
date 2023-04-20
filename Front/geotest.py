@@ -1,20 +1,32 @@
-import dash_leaflet as dl
-from dash import Dash, html, Output, Input
+# Import the required library
+from geopy.geocoders import Nominatim
+import folium
+from folium import plugins, branca
+import webbrowser
+import random
 
-# The external stylesheet holds the location button icon.
-app = Dash(external_stylesheets=['https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'],
-                prevent_initial_callbacks=True)
-app.layout = html.Div([
-    dl.Map([dl.TileLayer(), dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}})],
-           id="map", style={'width': '', 'height': '', 'margin': "auto", "display": "block"}),
-    html.Div(id="text")
-])
+m = folium.Map(zoom_control=200)
 
 
-@app.callback(Output("text", "children"), [Input("map", "location_lat_lon_acc")])
-def update_location(location):
-    print("You are within {} meters of (lat,lon) = ({},{})".format(location[2], location[0], location[1]))
 
+# Initialize Nominatim API
+geolocator = Nominatim(user_agent="MyApp")
 
-if __name__ == '__main__':
-    app.run_server()
+geolocation = "Южно-Сахалинск Комсомольская 277"
+
+location = geolocator.geocode(geolocation)
+print(location)
+randomdata= []
+
+for i in range(100000):
+    randomdata.append((random.randint(-90.000000000,90.000000000),random.randint(-720.000000000,720.000000000)))
+
+#longatt= str(location.latitude)+","+str(location.longitude)
+plugins.HeatMap(randomdata, radius=10, gradient={0.2: 'blue', 0.4: 'lime', 0.6: 'red'}).add_to(m)
+colormap = branca.colormap.LinearColormap(['blue', 'lime', 'red'], 
+                                          vmin=1, 
+                                          vmax=5, 
+                                          caption='Нарастание загруженности')
+colormap.add_to(m)
+m.save("a.html")
+webbrowser.open("a.html")
