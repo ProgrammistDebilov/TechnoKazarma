@@ -73,7 +73,7 @@ def finish_order(installer, end_time, comment):
     cur.execute(f'SELECT id FROM orders WHERE installer = "{str(installer)}" AND state = 0')
     id = cur.fetchall()[0][0]
     # print(id)
-    cur.execute(f'UPDATE orders SET state = 1, end_time = "{str(end_time)}" WHERE installer = "{str(installer)}" and id = "{id}"')
+    cur.execute(f'UPDATE orders SET state = 1, end_time = "{str(end_time)}", comment = "{comment}" WHERE installer = "{str(installer)}" and id = "{id}"')
     con.commit()
 
     cur.execute(f'UPDATE installers SET alacrity = 1 WHERE username = "{str(installer)}"')
@@ -88,9 +88,8 @@ def return_orders():
     orders_all_db = cur.fetchall()
     orders = []
     for x in orders_all_db:
-        order_d = {'id' : x[0], 'adress' : x[1], 'installer' : x[2], 'state' : x[3], 'start_time' : x[4], 'end_time' : x[5]}
+        order_d = {'id' : x[0], 'adress' : x[1], 'installer' : x[2], 'state' : x[3], 'start_time' : x[4], 'end_time' : x[5], 'comment' : x[6]}
         orders.append(order_d)
-    # print(orders)
     return orders
 
 def return_orders_n():
@@ -203,9 +202,9 @@ if __name__ == '__main__':
     # print(return_location('fgh'))
     # return_role('123')
     # insert_location(123, 23.5, 45.432)
-    # finish_order(123, '18.20')
+    finish_order(123, '18.20', 'Клиент, УЕБАН')
     # print(return_installers())
-    # start_order(123, 'ул. Путина 36', 14.50)
+    # start_order(123, 1, 14.50)
     # return_orders()
     # return_orders_n()
-    return_alacrity(123)
+    # return_alacrity(123)

@@ -1,10 +1,8 @@
 from datetime import datetime
 import threading
-import json
 import flet as ft
 import Backend.work_db as fdb
 import Backend.location as gps
-
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
@@ -278,7 +276,7 @@ def main(page: ft.Page):
         close_alert_accept_order_dlg('')
 
     def finish_order(e):
-        fdb.finish_order(page.client_storage.get('login'),datetime.now())
+        fdb.finish_order(page.client_storage.get('login'),datetime.now(), comment=order_commentary.value)
         page.client_storage.remove('accepted_order')
         page.client_storage.set('accepted_order', False)
         close_alert_completing_order_dlg('')
@@ -459,7 +457,6 @@ def main(page: ft.Page):
     # get_loc()
     page.theme_mode = 'DARK'
     page.on_resize = change_size
-
     page.update()
 
 
