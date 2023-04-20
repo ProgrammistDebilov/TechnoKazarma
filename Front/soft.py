@@ -2,6 +2,9 @@ from datetime import datetime
 import threading
 import flet as ft
 import Backend.work_db as fdb
+
+index_edit = 0
+
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
@@ -297,21 +300,33 @@ def main(page: ft.Page):
         order_info_dialog.open = False
         page.update()
 
+
+    edit_title_textfield = ft.TextField(label ='Изменить адрес', hint_text='Напишите новый адрес', width=200)
+    def edit_title(e):
+        fdb.update_adress(orders_info_id[index_edit], edit_title_textfield.value)
+        edit_title_textfield.value = ''
+        close_order_info_dlg('')
+        page.update()
+
+
     order_info_dlg_actions_base = [ft.TextButton('Закрыть', on_click=close_order_info_dlg)]
-    order_info_dlg_actions_edit = [ft.TextButton('Закрыть', on_click=close_order_info_dlg),ft.IconButton(icon=ft.icons.EDIT_OUTLINED, icon_color = '#ff4f12', icon_size=25)]
 
     order_info_dialog = ft.AlertDialog(
         modal=True,
         actions=order_info_dlg_actions_base
     )
 
+    order_info_dlg_actions_edit = [ft.TextButton('Закрыть', on_click=close_order_info_dlg),ft.IconButton(icon=ft.icons.EDIT_OUTLINED, icon_color = '#ff4f12', icon_size=25, on_click=edit_title)]
+
+
+
     def show_order_info(e):
+        global index_edit
         page.dialog = order_info_dialog
         index = orders_info.index(e.control)
         order = fdb.return_order(orders_info_id[index])
         icon = ft.Icon(ft.icons.NEWSPAPER_ROUNDED, size=100)
         status = ft.Text(color=ft.colors.GREY, size=15)
-        edit_title = ft.TextField(label = 'Изменить адрес', hint_text='Напишите новый адрес', disabled=True)
 
         if order.get('installer') != None:
             installer = ft.Text(f"Инсталятор - {order.get('installer')}", size=15, color=ft.colors.GREY)
@@ -344,11 +359,12 @@ def main(page: ft.Page):
 
         order_info_dialog.title = ft.Text(order.get('adress'))
         if order.get('state') == -1 and page.client_storage.get('role') == 'Диспетчер':
+            index_edit = index
             order_info_dialog.content = ft.Container(
-                content=ft.Column([icon, status, installer, time_start, time_end, comment_start, comment],
+                content=ft.Column([icon, status, installer, time_start, time_end, comment_start, comment, edit_title_textfield],
                                   horizontal_alignment=ft.CrossAxisAlignment.CENTER), alignment=ft.alignment.center)
-
-        order_info_dialog.content = ft.Container(content=ft.Column([icon,status,installer, time_start, time_end, comment_start, comment], horizontal_alignment=ft.CrossAxisAlignment.CENTER), alignment=ft.alignment.center)
+        else:
+            order_info_dialog.content = ft.Container(content=ft.Column([icon,status,installer, time_start, time_end, comment_start, comment], horizontal_alignment=ft.CrossAxisAlignment.CENTER), alignment=ft.alignment.center)
         order_info_dialog.open = True
         page.update()
 
@@ -492,6 +508,7 @@ def main(page: ft.Page):
     def update_installers_list():
         threading.Timer(10.0,update_installers_list).start()
         installers_info.clear()
+
         for i in fdb.return_installers():
             icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
             if i.get('alacrity') == 1:
@@ -503,13 +520,13 @@ def main(page: ft.Page):
                 ft.ListTile(
                     leading=icon,
                     title=ft.Text(i.get('login')),
-                    subtitle= ft.Text(i.get('rating'), color=ft.colors.GREY)
+                    subtitle= ft.Text(f"Рейтинг - {i.get('rating')}", color=ft.colors.GREY)
                 )
             )
         if page.route == '/installers':
             page.update()
     def update_order_list():
-        threading.Timer(10.0,update_order_list).start()
+        threading.Timer(5.0,update_order_list).start()
         orders_info.clear()
         orders_info_id.clear()
         for i in fdb.return_orders():
