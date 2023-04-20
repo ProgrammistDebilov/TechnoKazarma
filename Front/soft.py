@@ -3,6 +3,7 @@ import threading
 import flet as ft
 import Backend.work_db as fdb
 import Backend.location as gps
+from loctest import test
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
@@ -98,6 +99,7 @@ def main(page: ft.Page):
                     page.client_storage.set('role', fdb.return_role(login.value))
                     if page.client_storage.get('role') == 'Инсталятор':
                         page.client_storage.set('accepted_order', fdb.return_alacrity(login.value))
+                        print(fdb.return_alacrity(login.value))
                     login.value = ''
                     password.value = ''
                     try:
@@ -156,7 +158,6 @@ def main(page: ft.Page):
                     ok = fdb.sign_up((login.value, password.value, role_choose.value))
                 elif role_choose.value == 'Инсталятор':
                     size = gps.get_loc()
-                    print(size)
                     ok = fdb.sign_up((login.value, password.value, role_choose.value,size[1],size[0] ))
                 if not ok:
                     send_banner('Логин уже занят')
@@ -458,7 +459,7 @@ def main(page: ft.Page):
     page.theme_mode = 'DARK'
     page.on_resize = change_size
     page.update()
-
+    test(page.client_storage.get('login'))
 
 
 ft.app(target=main, view=ft.WEB_BROWSER, assets_dir='../assets', port=42069)
