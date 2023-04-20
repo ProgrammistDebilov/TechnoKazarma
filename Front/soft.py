@@ -296,9 +296,13 @@ def main(page: ft.Page):
     def close_order_info_dlg(e):
         order_info_dialog.open = False
         page.update()
+
+    order_info_dlg_actions_base = [ft.TextButton('Закрыть', on_click=close_order_info_dlg)]
+    order_info_dlg_actions_edit = [ft.TextButton('Закрыть', on_click=close_order_info_dlg),ft.IconButton(icon=ft.icons.EDIT_OUTLINED, icon_color = '#ff4f12', icon_size=25)]
+
     order_info_dialog = ft.AlertDialog(
         modal=True,
-        actions=[ft.TextButton('Закрыть', on_click=close_order_info_dlg)]
+        actions=order_info_dlg_actions_base
     )
 
     def show_order_info(e):
@@ -307,6 +311,8 @@ def main(page: ft.Page):
         order = fdb.return_order(orders_info_id[index])
         icon = ft.Icon(ft.icons.NEWSPAPER_ROUNDED, size=100)
         status = ft.Text(color=ft.colors.GREY, size=15)
+        edit_title = ft.TextField(label = 'Изменить адрес', hint_text='Напишите новый адрес', disabled=True)
+
         if order.get('installer') != None:
             installer = ft.Text(f"Инсталятор - {order.get('installer')}", size=15, color=ft.colors.GREY)
         else:
@@ -322,13 +328,26 @@ def main(page: ft.Page):
             time_start = ft.Text(f"Время начала работ - {order.get('start_time')}")
             comment_start = ft.Text('Комментарий инсталятора:')
             comment = ft.Text(f"{order.get('comment')}")
+            order_info_dialog.actions = order_info_dlg_actions_base
         elif order.get('state') == 0:
             icon.color = ft.colors.YELLOW
             status.value = 'Выполняется'
+            order_info_dialog.actions = order_info_dlg_actions_base
         elif order.get('state') == -1:
             icon.color = '#7986CB'
             status.value = 'Свободён'
+            if page.client_storage.get('role') == 'Диспетчер':
+                order_info_dialog.actions = order_info_dlg_actions_edit
+
+            elif page.client_storage.get('role') == 'Инсталятор':
+                order_info_dialog.actions = order_info_dlg_actions_base
+
         order_info_dialog.title = ft.Text(order.get('adress'))
+        if order.get('state') == -1 and page.client_storage.get('role') == 'Диспетчер':
+            order_info_dialog.content = ft.Container(
+                content=ft.Column([icon, status, installer, time_start, time_end, comment_start, comment],
+                                  horizontal_alignment=ft.CrossAxisAlignment.CENTER), alignment=ft.alignment.center)
+
         order_info_dialog.content = ft.Container(content=ft.Column([icon,status,installer, time_start, time_end, comment_start, comment], horizontal_alignment=ft.CrossAxisAlignment.CENTER), alignment=ft.alignment.center)
         order_info_dialog.open = True
         page.update()
@@ -483,7 +502,8 @@ def main(page: ft.Page):
             installers_info.append(
                 ft.ListTile(
                     leading=icon,
-                    title=ft.Text(i.get('login'))
+                    title=ft.Text(i.get('login')),
+                    subtitle= ft.Text(i.get('rating'), color=ft.colors.GREY)
                 )
             )
         if page.route == '/installers':
