@@ -11,7 +11,7 @@ logins = []
 locations = []
 returns = []
 login = "логин не передался"
-callbacks = Output("text", "children")
+callbacks = [Output('text', 'children')]
 for i in db.return_installers():
         logins.append(i['login'])
 for i in logins:
@@ -38,24 +38,36 @@ app.layout = html.Div([
     dcc.Location(id='url')
 ])
 
-
-
+for i in range(len(logins)):
+    callbacks.append(Output(str(i), "children"))
+print(callbacks)
 # Define a callback to update the markers position
 
-@app.callback(Output('text', 'children'), Input('interval', 'n_intervals'), Input('url', 'pathname'), Input("map", "location_lat_lon_acc"))
+@app.callback(    
+        callbacks,
+    [
+        Input("interval","n_intervals"),
+        Input("url", "pathname"),
+        Input("map","location_lat_lon_acc")
+    ],
+)
 def update_marker_position(n,k,j):
     login = "Ваш логин: "+k[1::]
     returns.clear()
     logins.clear()
     locations.clear()
+    returns.append(login)
     for i in db.return_installers():
         logins.append(i['login'])
     for i in logins:
         returns.append(list(db.return_location(i)))
     if j != None:
         db.insert_location(k[1::], j[0], j[1])
-    print(returns)
-    return login
+        print(j[0], j[1])
+        print(logins)
+        print(returns)
+        print(locations)
+    return returns
 
 
 if __name__ == '__main__':
