@@ -43,8 +43,7 @@ def test(l):
 
 # Define a callback to update the marker position
 
-@app.callback(Output('marker', 'position'),Output('marker2', 'position'), Output('text', 'children') [Input('interval', 'n_intervals'), Input('marker', 'children'), Input('marker2', 'children')])
-
+@app.callback(Output('marker', 'position'),Output('marker2', 'position'), Output('text', 'children'), [Input('interval', 'n_intervals'), Input('marker', 'children'), Input('marker2', 'children')])
 def update_marker_position(n, k, j):
     print(k['props']['children'], j['props']['children'])
     logins.clear()
@@ -56,6 +55,6 @@ def update_marker_position(n, k, j):
 
 
 
-# Run the app
 if __name__ == '__main__':
     app.run_server()
+

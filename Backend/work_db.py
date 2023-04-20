@@ -184,9 +184,9 @@ def return_alacrity(login):
     cur.execute(f'SELECT alacrity FROM installers WHERE username = {str(login)}')
     alacrity = cur.fetchall()[0][0]
     if alacrity == 0:
-        return False
-    if alacrity == 1:
         return True
+    if alacrity == 1:
+        return False
 
 
 
