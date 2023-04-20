@@ -117,4 +117,5 @@ def update_every_fucking_thing(n,k,j):
 
 if __name__ == '__main__':
     app.run_server()
+    x = 0
 
