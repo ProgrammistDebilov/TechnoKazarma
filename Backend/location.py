@@ -8,6 +8,7 @@ def get_loc():
     data = json.load(response)
 
     return data['loc'].split(',')
+
 if __name__ == '__main__':
     print(get_loc())
     j = datetime.now()

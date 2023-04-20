@@ -1,6 +1,6 @@
 from datetime import datetime
 import threading
-
+import json
 import flet as ft
 import Backend.work_db as fdb
 import Backend.location as gps
@@ -120,7 +120,6 @@ def main(page: ft.Page):
                             pass
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
-                    update_installers_list()
                     page.update()
                     page.go('/soft')
                     enter_btn.disabled = False
@@ -266,7 +265,6 @@ def main(page: ft.Page):
     def close_alert_completing_order_dlg(e):
         completing_order_dialog.open = False
         page.update()
-
 
     def accept_order(e):
         index = 0
@@ -457,6 +455,8 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
     page.on_keyboard_event = keyboard_shortcuts
     page.go(page.route)
+
+    # get_loc()
     page.theme_mode = 'DARK'
     page.on_resize = change_size
 
