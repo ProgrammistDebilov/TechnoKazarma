@@ -1,8 +1,10 @@
+from datetime import datetime
+import threading
+import json
 import flet as ft
-import webbrowser
-import os
 import Backend.work_db as fdb
 import Backend.location as gps
+
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
@@ -96,6 +98,8 @@ def main(page: ft.Page):
                     page.client_storage.set('login', login.value)
 
                     page.client_storage.set('role', fdb.return_role(login.value))
+                    if page.client_storage.get('role') == 'Инсталятор':
+                        page.client_storage.set('accepted_order', fdb.return_alacrity(login.value))
                     login.value = ''
                     password.value = ''
                     try:
@@ -116,19 +120,6 @@ def main(page: ft.Page):
                             pass
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
-                    installers_info.clear()
-                    for i in fdb.return_installers():
-                        icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
-                        if i.get('alacrity') == 1:
-                            icon.color = ft.colors.GREEN
-                        else:
-                            icon.color = ft.colors.RED
-                        installers_info.append(
-                            ft.ListTile(
-                                leading=icon,
-                                title=ft.Text(i.get('login'))
-                            )
-                        )
                     page.update()
                     page.go('/soft')
                     enter_btn.disabled = False
@@ -201,19 +192,7 @@ def main(page: ft.Page):
                             soft_main_list_content.append(add_new_order_btn)
 
 
-                    installers_info.clear()
-                    for i in fdb.return_installers():
-                        icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
-                        if i.get('alacrity') == 1:
-                            icon.color = ft.colors.GREEN
-                        else:
-                            icon.color = ft.colors.RED
-                        installers_info.append(
-                            ft.ListTile(
-                                leading=icon,
-                                title=ft.Text(i.get('login'))
-                            )
-                        )
+                    update_installers_list()
                     page.go('/soft')
                     enter_btn.disabled = False
 
@@ -267,13 +246,42 @@ def main(page: ft.Page):
         page.update()
 
     def open_alert_accept_order_dlg(e):
-        reqs = fdb.return_orders_n()
-        reqs_accept_order_options.clear()
-        for i in reqs:
-            reqs_accept_order_options.append(ft.dropdown.Option(i.get('adress')))
+        print(page.client_storage.get('accepted_order'))
+        if not page.client_storage.get('accepted_order'):
+            reqs = fdb.return_orders_n()
+            reqs_accept_order_options.clear()
+            reqs_accept_order_options_id.clear()
+            for i in reqs:
+                reqs_accept_order_options.append(ft.dropdown.Option(i.get('adress')))
+                reqs_accept_order_options_id.append(i.get('id'))
 
-        page.dialog = accept_order_dialog
-        accept_order_dialog.open = True
+            page.dialog = accept_order_dialog
+            accept_order_dialog.open = True
+        elif page.client_storage.get('accepted_order'):
+            page.dialog = completing_order_dialog
+            completing_order_dialog.open = True
+        page.update()
+
+    def close_alert_completing_order_dlg(e):
+        completing_order_dialog.open = False
+        page.update()
+
+    def accept_order(e):
+        index = 0
+        for option in reqs_accept_order.options:
+            if reqs_accept_order.value == option.key:
+                break
+            index +=1
+        fdb.start_order(page.client_storage.get('login'),reqs_accept_order_options_id[index],datetime.now())
+        page.client_storage.remove('accepted_order')
+        page.client_storage.set('accepted_order', True)
+        close_alert_accept_order_dlg('')
+
+    def finish_order(e):
+        fdb.finish_order(page.client_storage.get('login'),datetime.now())
+        page.client_storage.remove('accepted_order')
+        page.client_storage.set('accepted_order', False)
+        close_alert_completing_order_dlg('')
         page.update()
 
     def add_order_func(e):
@@ -286,9 +294,14 @@ def main(page: ft.Page):
             adress_field_add_order.error_text = 'Напишите для начала адрес заявки'
         page.update()
 
-    adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите город и адрес')
+    adress_field_add_order = ft.TextField(width=250,label='Адрес заявки', hint_text='Напишите город и адрес', focused_border_color='#7C4DFF')
     reqs_accept_order_options = []
-    reqs_accept_order = ft.Dropdown(options=reqs_accept_order_options,label='Заявки', hint_text='Выберите заявку')
+    reqs_accept_order_options_id = []
+
+    reqs_accept_order = ft.Dropdown(options=reqs_accept_order_options,label='Заявки', hint_text='Выберите заявку', focused_border_color='#7C4DFF')
+
+    order_commentary = ft.TextField()
+
     installers_info = []
     installs = ft.Column(installers_info)
 
@@ -303,11 +316,18 @@ def main(page: ft.Page):
         modal=True,
         title=ft.Text('Принятие заявки'),
         content=ft.Container(content=reqs_accept_order, width=page.width),
-        actions=[ft.TextButton('Принять', on_click=close_alert_accept_order_dlg),
+        actions=[ft.TextButton('Принять', on_click=accept_order),
                  ft.TextButton('Отмена', on_click=close_alert_accept_order_dlg)]
     )
+    completing_order_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text('Работа с заявкой'),
+        content=ft.Container(content=order_commentary, width=page.width),
+        actions=[ft.TextButton('Принять', on_click=finish_order),
+                 ft.TextButton('Отмена', on_click=close_alert_completing_order_dlg)]
+    )
 
-    #Нижняя панель
+     #Нижняя панель
     exit = ft.IconButton(icon=ft.icons.EXIT_TO_APP,on_click=exit_btn, icon_color='#6200EA',icon_size=20)
     installers_page = ft.IconButton(icon=ft.icons.BUILD_OUTLINED,on_click=lambda _:page.go('/installers'), icon_color='#6200EA',icon_size=20)
     home_page = ft.IconButton(icon=ft.icons.HOME_OUTLINED,on_click=lambda _:page.go('/soft'), icon_color='#6200EA',icon_size=20)
@@ -388,6 +408,24 @@ def main(page: ft.Page):
                 )
             )
         page.update()
+    def update_installers_list():
+        threading.Timer(10.0,update_installers_list).start()
+        installers_info.clear()
+        for i in fdb.return_installers():
+            icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
+            if i.get('alacrity') == 1:
+                icon.color = ft.colors.GREEN
+            else:
+                icon.color = ft.colors.RED
+
+            installers_info.append(
+                ft.ListTile(
+                    leading=icon,
+                    title=ft.Text(i.get('login'))
+                )
+            )
+        if page.route == '/installers':
+            page.update()
     def view_pop(view):
         page.views.pop()
         top_view = page.views[-1]
@@ -408,20 +446,7 @@ def main(page: ft.Page):
                 pass
             if add_new_order_btn not in soft_main_list_content:
                 soft_main_list_content.append(add_new_order_btn)
-        installers_info.clear()
-        for i in fdb.return_installers():
-            icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
-            if i.get('alacrity') == 1:
-                icon.color = ft.colors.GREEN
-            else:
-                icon.color = ft.colors.RED
-
-            installers_info.append(
-                ft.ListTile(
-                    leading=icon,
-                    title=ft.Text(i.get('login'))
-                )
-            )
+        update_installers_list()
         page.update()
         page.go('/soft')
     else:
@@ -430,6 +455,8 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
     page.on_keyboard_event = keyboard_shortcuts
     page.go(page.route)
+
+    # get_loc()
     page.theme_mode = 'DARK'
     page.on_resize = change_size
 

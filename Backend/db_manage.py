@@ -34,6 +34,9 @@ print('Installers')
 cur.execute('SELECT * FROM installers')
 print(cur.fetchall())
 
+# cur.execute('DELETE FROM users WHERE id = 5 OR id = 6 OR id = 7')
+con.commit()
+
 
 
 con.commit()
