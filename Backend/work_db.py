@@ -156,7 +156,7 @@ def insert_location(login, width, length):
     con = sql3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute(f'UPDATE installers SET width = {width}, length = {length} WHERE username = {str(login)}')
+    cur.execute(f'UPDATE installers SET width = {width}, length = {length} WHERE username = "{str(login)}"')
     con.commit()
 
 def return_installers():
