@@ -66,13 +66,17 @@ def start_order(installer,id, start_time):
 def finish_order(installer, end_time, comment):
     con = sql3.connect(db_path)
     cur = con.cursor()
-    cur.execute(f'SELECT id FROM orders WHERE installer = "{str(installer)}" AND state = 0')
-    id = cur.fetchall()[0][0]
-    # print(id)
+    # cur.execute(f'SELECT id FROM orders WHERE installer = "{str(installer)}" AND state = 0')
+    # id = cur.fetchall()[0][0]
+
+    cur.execute(f'SELECT rating FROM installers WHERE username = "{str(installer)}"')
+    rating = cur.fetchall()[0][0]
+    rating += 1
+    print(rating)
     cur.execute(f'UPDATE orders SET state = 1, end_time = "{str(end_time)}", comment = "{comment}" WHERE installer = "{str(installer)}" and id = "{id}"')
     con.commit()
 
-    cur.execute(f'UPDATE installers SET alacrity = 1 WHERE username = "{str(installer)}"')
+    cur.execute(f'UPDATE installers SET alacrity = 1, rating = {rating} WHERE username = "{str(installer)}"')
     con.commit()
 
 
@@ -198,4 +202,4 @@ options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 
 if __name__ == '__main__':
-    pass
+    finish_order(123, 2, 3)
