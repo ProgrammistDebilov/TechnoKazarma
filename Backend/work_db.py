@@ -66,8 +66,8 @@ def start_order(installer,id, start_time):
 def finish_order(installer, end_time, comment):
     con = sql3.connect(db_path)
     cur = con.cursor()
-    # cur.execute(f'SELECT id FROM orders WHERE installer = "{str(installer)}" AND state = 0')
-    # id = cur.fetchall()[0][0]
+    cur.execute(f'SELECT id FROM orders WHERE installer = "{str(installer)}" AND state = 0')
+    id = cur.fetchall()[0][0]
 
     cur.execute(f'SELECT rating FROM installers WHERE username = "{str(installer)}"')
     rating = cur.fetchall()[0][0]
@@ -78,7 +78,6 @@ def finish_order(installer, end_time, comment):
 
     cur.execute(f'UPDATE installers SET alacrity = 1, rating = {rating} WHERE username = "{str(installer)}"')
     con.commit()
-
 
 def return_orders():
     con = sql3.connect(db_path)
@@ -164,11 +163,11 @@ def return_installers():
     con = sql3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute(f'SELECT username, alacrity, width, length FROM installers')
+    cur.execute(f'SELECT username, alacrity, width, length, rating FROM installers')
     installers_db = cur.fetchall()
     installers = []
     for i in installers_db:
-        installer_d = {'login' : i[0], 'alacrity' : i[1], 'width' : i[2], 'length' : i[3]}
+        installer_d = {'login' : i[0], 'alacrity' : i[1], 'width' : i[2], 'length' : i[3], 'rating' : i[4]}
         installers.append(installer_d)
 
     return installers
@@ -198,8 +197,15 @@ def return_alacrity(login):
         return False
 
 
+def return_rating(login):
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f)
+
+
 options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 
 if __name__ == '__main__':
-    finish_order(123, 2, 3)
+    print(return_installers())
