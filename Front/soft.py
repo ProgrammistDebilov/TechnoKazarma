@@ -1,10 +1,8 @@
 from datetime import datetime
 import threading
-
 import flet as ft
 import Backend.work_db as fdb
 import Backend.location as gps
-
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
@@ -120,7 +118,6 @@ def main(page: ft.Page):
                             pass
                         if add_new_order_btn not in soft_main_list_content:
                             soft_main_list_content.append(add_new_order_btn)
-                    update_installers_list()
                     page.update()
                     page.go('/soft')
                     enter_btn.disabled = False
@@ -267,7 +264,6 @@ def main(page: ft.Page):
         completing_order_dialog.open = False
         page.update()
 
-
     def accept_order(e):
         index = 0
         for option in reqs_accept_order.options:
@@ -280,7 +276,7 @@ def main(page: ft.Page):
         close_alert_accept_order_dlg('')
 
     def finish_order(e):
-        fdb.finish_order(page.client_storage.get('login'),datetime.now())
+        fdb.finish_order(page.client_storage.get('login'),datetime.now(), comment=order_commentary.value)
         page.client_storage.remove('accepted_order')
         page.client_storage.set('accepted_order', False)
         close_alert_completing_order_dlg('')
@@ -338,7 +334,7 @@ def main(page: ft.Page):
 
 
 
-    show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : page.launch_url("100.65.5.56:8050"))
+    show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : page.launch_url("http://100.65.5.56:8050"))
     add_new_order_btn = ft.ElevatedButton('Зафиксировать заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_new_order_dlg)
     accept_order_btn = ft.ElevatedButton('Принять заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_accept_order_dlg)
 
@@ -457,9 +453,10 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
     page.on_keyboard_event = keyboard_shortcuts
     page.go(page.route)
+
+    # get_loc()
     page.theme_mode = 'DARK'
     page.on_resize = change_size
-
     page.update()
 
 
