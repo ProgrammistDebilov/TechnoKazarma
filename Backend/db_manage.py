@@ -24,7 +24,10 @@ cur = con.cursor()
 #             'id INTEGER PRIMARY KEY AUTOINCREMENT, '
 #             'adress TEXT, '
 #             'installer INTEGER, '
-#             'FOREIGN KEY (installer) REFERENCES installers (id))')
+#             'state INTEGER, '
+#             'start_time TEXT, '
+#             'end_time TEXT, '
+#             'comment TEXT)')
 
 print('Users')
 cur.execute(f'SELECT * FROM users')
