@@ -18,8 +18,6 @@ for i in logins:
 markers = [TileLayer()]
 for i, j in enumerate(locations):
     markers.append(Marker(id = str(i), position=list(j)))
-
-print(markers)
 # Define a list of marker positions to loop through
 
 
@@ -51,6 +49,6 @@ def update_marker_position(n):
     return login
 
 
-# Run the app
 if __name__ == '__main__':
     app.run_server()
+
