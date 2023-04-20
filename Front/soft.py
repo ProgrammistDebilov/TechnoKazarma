@@ -2,7 +2,6 @@ from datetime import datetime
 import threading
 import flet as ft
 import Backend.work_db as fdb
-import Backend.location as gps
 def main(page: ft.Page):
     def keyboard_shortcuts(e:ft.KeyboardEvent):
         if page.route == '/login':
@@ -156,8 +155,7 @@ def main(page: ft.Page):
                 if role_choose.value != 'Инсталятор':
                     ok = fdb.sign_up((login.value, password.value, role_choose.value))
                 elif role_choose.value == 'Инсталятор':
-                    size = gps.get_loc()
-                    ok = fdb.sign_up((login.value, password.value, role_choose.value,size[1],size[0] ))
+                    ok = fdb.sign_up((login.value, password.value, role_choose.value))
                 if not ok:
                     send_banner('Логин уже занят')
                     enter_btn.disabled = False
@@ -384,7 +382,7 @@ def main(page: ft.Page):
 
     show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : page.launch_url("https://2229-93-120-237-6.ngrok-free.app/" + page.client_storage.get('login')))
     add_new_order_btn = ft.ElevatedButton('Зафиксировать заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_new_order_dlg)
-    accept_order_btn = ft.ElevatedButton('Принять заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_accept_order_dlg)
+    accept_order_btn = ft.ElevatedButton('Управлять заявкой', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_accept_order_dlg)
 
     soft_main_list_content = [show_map_btn,add_new_order_btn,accept_order_btn]
 
@@ -545,7 +543,6 @@ def main(page: ft.Page):
     page.on_keyboard_event = keyboard_shortcuts
     page.go(page.route)
 
-    # get_loc()
     page.theme_mode = 'DARK'
     page.on_resize = change_size
     page.update()
