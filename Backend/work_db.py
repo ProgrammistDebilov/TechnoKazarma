@@ -70,13 +70,13 @@ def start_order(installer,id, start_time):
 def finish_order(installer, end_time):
     con = sql3.connect(db_path)
     cur = con.cursor()
-    cur.execute(f'SELECT id FROM orders WHERE installer = {str(installer)} AND state = 0')
+    cur.execute(f'SELECT id FROM orders WHERE installer = "{str(installer)}" AND state = 0')
     id = cur.fetchall()[0][0]
     # print(id)
-    cur.execute(f'UPDATE orders SET state = 1, end_time = {str(end_time)} WHERE installer = {str(installer)} and id = {id}')
+    cur.execute(f'UPDATE orders SET state = 1, end_time = "{str(end_time)}" WHERE installer = "{str(installer)}" and id = "{id}"')
     con.commit()
 
-    cur.execute(f'UPDATE installers SET alacrity = 1 WHERE username = {str(installer)}')
+    cur.execute(f'UPDATE installers SET alacrity = 1 WHERE username = "{str(installer)}"')
     con.commit()
 
 

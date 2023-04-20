@@ -98,6 +98,8 @@ def main(page: ft.Page):
                     page.client_storage.set('login', login.value)
 
                     page.client_storage.set('role', fdb.return_role(login.value))
+                    if page.client_storage.get('role') == 'Инсталятор':
+                        page.client_storage.set('accepted_order', fdb.return_alacrity(login.value))
                     login.value = ''
                     password.value = ''
                     try:
@@ -245,6 +247,7 @@ def main(page: ft.Page):
         page.update()
 
     def open_alert_accept_order_dlg(e):
+        print(page.client_storage.get('accepted_order'))
         if not page.client_storage.get('accepted_order'):
             reqs = fdb.return_orders_n()
             reqs_accept_order_options.clear()
@@ -261,7 +264,7 @@ def main(page: ft.Page):
         page.update()
 
     def close_alert_completing_order_dlg(e):
-        accept_order_dialog.open = False
+        completing_order_dialog.open = False
         page.update()
 
 
@@ -272,6 +275,7 @@ def main(page: ft.Page):
                 break
             index +=1
         fdb.start_order(page.client_storage.get('login'),reqs_accept_order_options_id[index],datetime.now())
+        page.client_storage.remove('accepted_order')
         page.client_storage.set('accepted_order', True)
         close_alert_accept_order_dlg('')
 
