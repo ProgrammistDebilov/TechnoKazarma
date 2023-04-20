@@ -1,9 +1,6 @@
-import dash
-from dash import html
+from dash import *
 from dash_leaflet import Marker, TileLayer, Map, Tooltip
-from dash import dcc
 from dash.dependencies import Output, Input
-import random
 import Backend.work_db as db
 
 # Create a Dash app
@@ -12,7 +9,7 @@ app = dash.Dash(__name__)
 # Define the initial marker position
 logins = []
 locations = []
-login = ""
+login = "здесь ничего"
 for i in db.return_installers():
         logins.append(i['login'])
 for i in logins:
@@ -28,13 +25,13 @@ print(markers)
 
 # Define the layout of the app
 app.layout = html.Div([
-    Map(markers, style={'width': 'auto', 'height': '98vh', 'margin': "auto", "display": "block"}, zoom=3),
-    html.Div(id="text"),
+    Map(markers, style={'width': 'auto', 'height': '50vh', 'margin': "auto", "display": "block"}, zoom=3, id= 'map'),
     dcc.Interval(
         id='interval',
         interval=2000, # Refresh every 2 seconds
         n_intervals=0
-    )
+    ),
+    html.Div(id="text"),
 ])
 
 def test(l):
@@ -43,17 +40,15 @@ def test(l):
 
 # Define a callback to update the marker position
 
-@app.callback(Output('marker', 'position'),Output('marker2', 'position'), Output('text', 'children') [Input('interval', 'n_intervals'), Input('marker', 'children'), Input('marker2', 'children')])
+@app.callback(Output("text", "children"), [Input('interval', 'n_intervals')])
 
-def update_marker_position(n, k, j):
-    print(k['props']['children'], j['props']['children'])
+def update_marker_position(n):
     logins.clear()
     for i in db.return_installers():
         logins.append(i['login'])
     for i in logins:
         print(list(db.return_location(i)))
-    return [[str(random.randint(-90,90)), str(random.randint(-180,180))],[random.randint(-90,90), random.randint(-180,180)], login]
-
+    return login
 
 
 # Run the app
