@@ -178,6 +178,16 @@ def return_id(adress):
     return id
 
 
+def return_alacrity(login):
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'SELECT alacrity FROM installers WHERE username = {str(login)}')
+    alacrity = cur.fetchall()[0][0]
+    if alacrity == 0:
+        return False
+    if alacrity == 1:
+        return True
 
 
 
@@ -195,6 +205,7 @@ if __name__ == '__main__':
     # insert_location(123, 23.5, 45.432)
     # finish_order(123, '18.20')
     # print(return_installers())
-    start_order(123, 'ул. Путина 36', 14.50)
+    # start_order(123, 'ул. Путина 36', 14.50)
     # return_orders()
     # return_orders_n()
+    return_alacrity(123)
