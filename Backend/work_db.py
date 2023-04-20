@@ -8,12 +8,8 @@ def sign_up(options):
     login = options[0]
     password = options[1]
     role = options[2]
-    width = 0
-    length = 0
     if role == 'Инсталятор':
         role = 'i'
-        width = options[3]
-        length = options[4]
     elif role == 'Диспетчер':
         role = 'd'
     cur.execute(f'SELECT * FROM users WHERE login = "{str(login)}"')
@@ -27,7 +23,7 @@ def sign_up(options):
         # print("норм")
         if role == 'i':
             cur.execute(
-                f'INSERT INTO installers (username, alacrity, width, length) VALUES("{str(login)}", 1, "{width}", "{length}");')
+                f'INSERT INTO installers (username, alacrity, rating) VALUES("{str(login)}", 1, 0);')
             # print("норм инсталятор")
         con.commit()
         return 1
@@ -72,13 +68,16 @@ def finish_order(installer, end_time, comment):
     cur = con.cursor()
     cur.execute(f'SELECT id FROM orders WHERE installer = "{str(installer)}" AND state = 0')
     id = cur.fetchall()[0][0]
-    # print(id)
+
+    cur.execute(f'SELECT rating FROM installers WHERE username = "{str(installer)}"')
+    rating = cur.fetchall()[0][0]
+    rating += 1
+    print(rating)
     cur.execute(f'UPDATE orders SET state = 1, end_time = "{str(end_time)}", comment = "{comment}" WHERE installer = "{str(installer)}" and id = "{id}"')
     con.commit()
 
-    cur.execute(f'UPDATE installers SET alacrity = 1 WHERE username = "{str(installer)}"')
+    cur.execute(f'UPDATE installers SET alacrity = 1, rating = {rating} WHERE username = "{str(installer)}"')
     con.commit()
-
 
 def return_orders():
     con = sql3.connect(db_path)
@@ -92,6 +91,15 @@ def return_orders():
         orders.append(order_d)
     return orders
 
+def return_order(id):
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'SELECT * FROM orders WHERE id = {id}')
+    order_db = cur.fetchall()[0]
+    order = {'id' : order_db[0], 'adress' : order_db[1], 'installer' : order_db[2], 'state' : order_db[3], 'start_time' : order_db[4], 'end_time' : order_db[5], 'comment' : order_db[6]}
+    # print(order)
+    return order
 def return_orders_n():
     con = sql3.connect(db_path)
     cur = con.cursor()
@@ -116,7 +124,7 @@ def return_aval_in():
     for i in installs:
         availible_installs.append(i[0])
 
-    print(availible_installs)
+    # print(availible_installs)
     return availible_installs
 
 
@@ -135,12 +143,12 @@ def return_role(login):
 
     cur.execute(f'SELECT role FROM users WHERE login = "{str(login)}"')
     role = cur.fetchall()[0][0]
-    print(role)
+    # print(role)
     if role == 'i':
         role_ru = 'Инсталятор'
     elif role == 'd':
         role_ru = 'Диспетчер'
-    print(role_ru)
+    # print(role_ru)
     con.commit()
     return role_ru
 
@@ -155,11 +163,11 @@ def return_installers():
     con = sql3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute(f'SELECT username, alacrity, width, length FROM installers')
+    cur.execute(f'SELECT username, alacrity, width, length, rating FROM installers')
     installers_db = cur.fetchall()
     installers = []
     for i in installers_db:
-        installer_d = {'login' : i[0], 'alacrity' : i[1], 'width' : i[2], 'length' : i[3]}
+        installer_d = {'login' : i[0], 'alacrity' : i[1], 'width' : i[2], 'length' : i[3], 'rating' : i[4]}
         installers.append(installer_d)
 
     return installers
@@ -189,22 +197,15 @@ def return_alacrity(login):
         return False
 
 
+def return_rating(login):
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f)
 
 
 options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 
 if __name__ == '__main__':
-    # sign_in(options)
-    # sign_up(options_all)
-    # return_aval_in()
-    # add_order('ул. Путина 36')
-    # print(return_location('fgh'))
-    # return_role('123')
-    # insert_location(123, 23.5, 45.432)
-    finish_order(123, '18.20', 'Клиент, УЕБАН')
-    # print(return_installers())
-    # start_order(123, 1, 14.50)
-    # return_orders()
-    # return_orders_n()
-    # return_alacrity(123)
+    print(return_installers())
