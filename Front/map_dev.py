@@ -1,37 +1,25 @@
 from dash import *
-from dash_leaflet import Marker, TileLayer, Map, Tooltip, LocateControl
+from dash_leaflet import TileLayer, Map, LocateControl
 from dash.dependencies import Output, Input
 import Backend.work_db as db
-from geopy.geocoders import Nominatim
+from geopy.geocoders import Photon
 # Create a Dash app
 app = dash.Dash(__name__)
 # define icons
-icon1 = {
-    "iconUrl": 'https://i.ibb.co/YcnsYpn/shreks.png',
+icon_green = {
+    "iconUrl": 'https://i.ibb.co/SmZPXPc/25962fdc-4e92-4303-97c6-ea2c7e52d4cc.png',
     "iconSize": [38, 95],  # size of the icon
-    "shadowSize": [50, 64],  # size of the shadow
-    "iconAnchor": [22, 94],  # point of the icon which will correspond to marker's location
-    "shadowAnchor": [4, 62],  # the same for the shadow
-    "popupAnchor": [-3, -76]  # point from which the popup should open relative to the iconAnchor
 }
-icon2 = {
-    "iconUrl": 'https://i.ibb.co/ZKJYbB1/patrik.png',
+icon_red = {
+    "iconUrl": 'https://i.ibb.co/dKP3Lm5/2c4a6b06-72cd-49e1-950d-ec2d5295d9b5.png',
     "iconSize": [38, 95],  # size of the icon
-    "shadowSize": [50, 64],  # size of the shadow
-    "iconAnchor": [22, 94],  # point of the icon which will correspond to marker's location
-    "shadowAnchor": [4, 62],  # the same for the shadow
-    "popupAnchor": [-3, -76]  # point from which the popup should open relative to the iconAnchor
 }
-icon3 = {
-    "iconUrl": 'https://i.ibb.co/bJb8bZC/gosling.png',
+icon_yellow = {
+    "iconUrl": 'https://i.ibb.co/zfvg2jM/f18848bd-2052-47cd-9679-8651bd705346.png',
     "iconSize": [38, 95],  # size of the icon
-    "shadowSize": [50, 64],  # size of the shadow
-    "iconAnchor": [22, 94],  # point of the icon which will correspond to marker's location
-    "shadowAnchor": [4, 62],  # the same for the shadow
-    "popupAnchor": [-3, -76]  # point from which the popup should open relative to the iconAnchor
 }
 #define geolocator
-geolocator = Nominatim(user_agent="MyApp")
+geolocator = Photon(user_agent="MyApp")
 
 # Define the layout of the app
 app = Dash(external_stylesheets=['https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'],
@@ -70,6 +58,11 @@ def update_every_fucking_thing(n,k,j):
     markers = [TileLayer(), LocateControl(options={'locateOptions': {'enableHighAccuracy': True}})]
     for i,j in enumerate(db.return_installers()):
         markers.append({'props': {'children': {'props': {'children': j['login']}, 'type': 'Tooltip', 'namespace': 'dash_leaflet'}, 'id': str(i), 'position': db.return_location(j['login'])}, 'type': 'Marker', 'namespace': 'dash_leaflet'})
+        max_num = i
+    for i,j in enumerate(db.return_orders()):
+        location = geolocator.geocode(j['adress'])
+        k = max_num + i + 1
+        markers.append({'props': {'children': {'props': {'children': location.address}, 'type': 'Tooltip', 'namespace': 'dash_leaflet'}, 'id': str(k), 'position':[ location.latitude, location.longitude] }, 'type': 'Marker', 'namespace': 'dash_leaflet'})
     return [markers,name_login]
 
 
