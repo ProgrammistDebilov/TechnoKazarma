@@ -67,7 +67,7 @@ def start_order(installer,id, start_time):
     con.commit()
     # print('good')
 
-def finish_order(installer, end_time):
+def finish_order(installer, end_time, comment):
     con = sql3.connect(db_path)
     cur = con.cursor()
     cur.execute(f'SELECT id FROM orders WHERE installer = "{str(installer)}" AND state = 0')
