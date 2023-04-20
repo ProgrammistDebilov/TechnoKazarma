@@ -8,12 +8,8 @@ def sign_up(options):
     login = options[0]
     password = options[1]
     role = options[2]
-    width = 0
-    length = 0
     if role == 'Инсталятор':
         role = 'i'
-        width = options[3]
-        length = options[4]
     elif role == 'Диспетчер':
         role = 'd'
     cur.execute(f'SELECT * FROM users WHERE login = "{str(login)}"')
@@ -27,7 +23,7 @@ def sign_up(options):
         # print("норм")
         if role == 'i':
             cur.execute(
-                f'INSERT INTO installers (username, alacrity, width, length) VALUES("{str(login)}", 1, "{width}", "{length}");')
+                f'INSERT INTO installers (username, alacrity, rating) VALUES("{str(login)}", 1, 0);')
             # print("норм инсталятор")
         con.commit()
         return 1
@@ -198,25 +194,8 @@ def return_alacrity(login):
         return False
 
 
-
-
-
-
 options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 
 if __name__ == '__main__':
-    # sign_in(options)
-    # sign_up(options_all)
-    # return_aval_in()
-    # add_order('ул. Путина 36')
-    # print(return_location('fgh'))
-    # return_role('123')
-    # insert_location(123, 23.5, 45.432)
-    # finish_order(123, '18.20', 'Клиент, УЕБАН')
-    # print(return_installers())
-    # start_order(123, 1, 14.50)
-    # return_orders()
-    # return_orders_n()
-    # return_alacrity(123)
-    return_order(4)
+    pass
