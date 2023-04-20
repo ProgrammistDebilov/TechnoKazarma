@@ -1,45 +1,53 @@
-from dash import Dash, html, Output, Input
-import dash_html_components as html
-import dash_leaflet as dl
-import dash_core_components as dcc
-import pandas as pd
-import numpy as np
+import dash
+from dash import html
+from dash_leaflet import Marker, TileLayer, Map, Tooltip
+from dash import dcc
 from dash.dependencies import Output, Input
 import random
+import Backend.work_db as db
 
 # Create a Dash app
-#app = dash.Dash(__name__)
+app = dash.Dash(__name__)
 
 # Define the initial marker position
-
+logins = []
+locations = []
+for i in db.return_installers():
+        logins.append(i['login'])
+for i in logins:
+    locations.append(list(db.return_location(i)))
 # Define a list of marker positions to loop through
-app = Dash(external_stylesheets=['https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'],
-                prevent_initial_callbacks=True)
+markers = [TileLayer()]
+for i, j in enumerate(locations):
+    markers.append(Marker(id = str(i), position=list(j)))
+
+print(markers)
+# Define a list of marker positions to loop through
+
 
 # Define the layout of the app
 app.layout = html.Div([
-    dl.Map([
-        dl.TileLayer(),
-        dl.Marker(id='marker', position=[random.randint(-90,90), random.randint(-180,180)]),
-        dl.Marker(id = 'marker2', position=[random.randint(-90,90), random.randint(-180,180)]),
-        dl.LocateControl(options={'locateOptions': {'enableHighAccuracy': True}})
-    ], style={'width': 'auto', 'height': '98vh', 'margin': "auto", "display": "block"}, zoom=10),
+    Map(markers, style={'width': 'auto', 'height': '98vh', 'margin': "auto", "display": "block"}, zoom=3),
     dcc.Interval(
         id='interval',
         interval=2000, # Refresh every 2 seconds
         n_intervals=0
-    ),
-        html.Div(id="text")
+    )
 ])
 
 # Define a callback to update the marker position
-@app.callback(Output('marker', 'position'),Output('marker2', 'position'),Output("text", "children"), [Input('interval', 'n_intervals'),Input("map", "location_lat_lon_acc")])
-def update_marker_position(n):
-    print('cock')
-    # Get the next marker position from the list
-    return [[random.randint(-90,90), random.randint(-180,180)],[random.randint(-90,90), random.randint(-180,180)]]
-def update_location(location):
-    print("You are within {} meters of (lat,lon) = ({},{})".format(location[2], location[0], location[1]))
+
+@app.callback(Output('marker', 'position'),Output('marker2', 'position'), [Input('interval', 'n_intervals'), Input('marker', 'children'), Input('marker2', 'children')])
+def update_marker_position(n, k, j):
+    print(k['props']['children'], j['props']['children'])
+    logins.clear()
+    for i in db.return_installers():
+        logins.append(i['login'])
+    for i in logins:
+        print(list(db.return_location(i)))
+    return [[str(random.randint(-90,90)), str(random.randint(-180,180))],[random.randint(-90,90), random.randint(-180,180)]]
+def test(a):
+    print(a)
 
 # Run the app
 if __name__ == '__main__':
