@@ -92,6 +92,15 @@ def return_orders():
         orders.append(order_d)
     return orders
 
+def return_order(id):
+    con = sql3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute(f'SELECT * FROM orders WHERE id = {id}')
+    order_db = cur.fetchall()[0]
+    order = {'id' : order_db[0], 'adress' : order_db[1], 'installer' : order_db[2], 'state' : order_db[3], 'start_time' : order_db[4], 'end_time' : order_db[5], 'comment' : order_db[6]}
+    print(order)
+    return order
 def return_orders_n():
     con = sql3.connect(db_path)
     cur = con.cursor()
@@ -191,6 +200,8 @@ def return_alacrity(login):
 
 
 
+
+
 options = [123, 123]
 options_all = ['fgh', 'inst1', 'Инсталятор', 234.543, 8739.432]
 
@@ -202,9 +213,10 @@ if __name__ == '__main__':
     # print(return_location('fgh'))
     # return_role('123')
     # insert_location(123, 23.5, 45.432)
-    finish_order(123, '18.20', 'Клиент, УЕБАН')
+    # finish_order(123, '18.20', 'Клиент, УЕБАН')
     # print(return_installers())
     # start_order(123, 1, 14.50)
     # return_orders()
     # return_orders_n()
     # return_alacrity(123)
+    return_order(4)
