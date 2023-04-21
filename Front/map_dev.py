@@ -87,10 +87,14 @@ def update_every_fucking_thing(n,k,j):
         except ConnectionError:
             location = None
         k = max_num + i + 1
-        if location != None and j['comment'] != None:
-            markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=[Tooltip(location.address), Popup([html.Div("Адрес: "+location.address), html.Div("Комментарий: "+j['comment']), html.Div("Исполнитель: "+ str(j['installer']))])]))
-        elif location != None:
-            markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=[Tooltip(location.address), Popup([html.Div("Адрес: "+location.address)])]))
+        if location != None:
+            match j['state']:
+                case 1:
+                    markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=[Tooltip(location.address), Popup([html.Div("Адрес: "+location.address), html.Div("Исполнитель: "+ str(j['installer'])), html.Div("Комментарий: "+j['comment'])])]))
+                case 0:
+                    markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=[Tooltip(location.address), Popup([html.Div("Адрес: "+location.address), html.Div("Исполнитель: "+ str(j['installer']))])]))
+                case -1:
+                    markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=[Tooltip(location.address), Popup([html.Div("Адрес: "+location.address)])]))
     return [markers,name_login]
 
 
