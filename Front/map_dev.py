@@ -1,5 +1,5 @@
 from dash import *
-from dash_leaflet import TileLayer, Map, LocateControl, Marker, Tooltip
+from dash_leaflet import TileLayer, Map, LocateControl, Marker, Tooltip, Popup
 from dash.dependencies import Output, Input
 import Backend.work_db as db
 from geopy.geocoders import Photon
@@ -79,7 +79,7 @@ def update_every_fucking_thing(n,k,j):
     if j != None:
         db.insert_location(login, j[0], j[1])
     for i,j in enumerate(db.return_installers()):
-        markers.append(Marker(id = str(i), icon=installers_icons[str(j['alacrity'])], position=db.return_location(j['login']), children=Tooltip(j['login'])))
+        markers.append(Marker(id = str(i), icon=installers_icons[str(j['alacrity'])], position=db.return_location(j['login']), children=[Tooltip(j['login']),Popup([html.Div("Инсталятор: "+j['login']), html.Div("Рейтинг: "+str(j['rating']))])]))
         max_num = i
     for i,j in enumerate(db.return_orders()):
         try:
@@ -87,8 +87,10 @@ def update_every_fucking_thing(n,k,j):
         except ConnectionError:
             location = None
         k = max_num + i + 1
-        if location != None:
-            markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=Tooltip(location.address)))
+        if location != None and j['comment'] != None:
+            markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=[Tooltip(location.address), Popup([html.Div("Адрес: "+location.address), html.Div("Комментарий: "+j['comment']), html.Div("Исполнитель: "+ str(j['installer']))])]))
+        elif location != None:
+            markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=[Tooltip(location.address), Popup([html.Div("Адрес: "+location.address)])]))
     return [markers,name_login]
 
 
