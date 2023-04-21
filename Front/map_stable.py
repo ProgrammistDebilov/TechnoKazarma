@@ -2,7 +2,7 @@ from dash import *
 from dash_leaflet import TileLayer, Map, LocateControl, Marker, Tooltip, Popup
 from dash.dependencies import Output, Input
 import Backend.work_db as db
-from geopy.geocoders import GeoNames
+from geopy.geocoders import Nominatim
 # Create a Dash app
 app = dash.Dash(__name__)
 # define icons
@@ -41,7 +41,7 @@ orders_icons = {
     "1": icon_green
 }
 #define geolocator
-geolocator = GeoNames(username="null_geodata" ,user_agent="MyApp")
+geolocator = Nominatim(user_agent="MyApp")
 
 # Define the layout of the app
 app = Dash(external_stylesheets=['https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'],
@@ -50,7 +50,7 @@ app.layout = html.Div([
     Map( style={'width': 'auto', 'height': '95vh', 'margin': "auto", "display": "block"}, zoom=3, id= 'map'),
     dcc.Interval(
         id='interval',
-        interval=2500, # Refresh every 2.5 seconds
+        interval=10000, # Refresh every 2.5 seconds
         n_intervals=0
     ),
     html.Div(id="text"),
@@ -84,7 +84,7 @@ def update_every_fucking_thing(n,k,j):
     for i,j in enumerate(db.return_orders()):
         try:
             location = geolocator.geocode(j['adress'])
-        except ConnectionError:
+        except:
             location = None
         k = max_num + i + 1
         if location != None:
