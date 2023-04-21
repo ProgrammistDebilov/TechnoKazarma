@@ -415,7 +415,7 @@ def main(page: ft.Page):
 
 
 
-    show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : page.launch_url("http://127.0.0.1:8050/" + page.client_storage.get('login')))
+    show_map_btn = ft.ElevatedButton(content=ft.Container(ft.Column([ft.Text('Открыть карту', size=30)], alignment=ft.MainAxisAlignment.CENTER),alignment=ft.alignment.center), width=300,height=80, bgcolor='#ff4f12', color=ft.colors.WHITE,on_click=lambda _ : page.launch_url("http://100.65.5.162:8050/" + page.client_storage.get('login')))
     add_new_order_btn = ft.ElevatedButton('Зафиксировать заявку', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_new_order_dlg)
     accept_order_btn = ft.ElevatedButton('Управлять заявкой', width=200, height=40, bgcolor='#607D8B', color=ft.colors.WHITE, on_click=open_alert_accept_order_dlg)
 
@@ -508,7 +508,6 @@ def main(page: ft.Page):
     def update_installers_list():
         threading.Timer(10.0,update_installers_list).start()
         installers_info.clear()
-
         for i in fdb.return_installers():
             icon = ft.Icon(ft.icons.PERSON_4_OUTLINED)
             if i.get('alacrity') == 1:
@@ -523,6 +522,7 @@ def main(page: ft.Page):
                     subtitle= ft.Text(f"Рейтинг - {i.get('rating')}", color=ft.colors.GREY)
                 )
             )
+        # print(installers_info)
         if page.route == '/installers':
             page.update()
     def update_order_list():
@@ -575,6 +575,8 @@ def main(page: ft.Page):
         page.go('/soft')
     else:
         page.go('/login')
+        update_installers_list()
+        update_order_list()
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.on_keyboard_event = keyboard_shortcuts
