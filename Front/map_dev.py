@@ -82,9 +82,13 @@ def update_every_fucking_thing(n,k,j):
         markers.append(Marker(id = str(i), icon=installers_icons[str(j['alacrity'])], position=db.return_location(j['login']), children=Tooltip(j['login'])))
         max_num = i
     for i,j in enumerate(db.return_orders()):
-        location = geolocator.geocode(j['adress'])
+        try:
+            location = geolocator.geocode(j['adress'])
+        except ConnectionError:
+            location = None
         k = max_num + i + 1
-        markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=Tooltip(location.address)))
+        if location != None:
+            markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=Tooltip(location.address)))
     return [markers,name_login]
 
 
