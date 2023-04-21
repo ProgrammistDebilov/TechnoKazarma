@@ -26,8 +26,13 @@ icon_blue = {
     "iconSize": [32, 48],  # size of the icon
     "iconAnchor": [16,48]
 }
+icon_black = {
+    "iconUrl": 'https://i.ibb.co/LCKQHFQ/5c3434f1-6dcf-4577-b47b-2c448ccfd56d.png',
+    "iconSize": [32, 48],  # size of the icon
+    "iconAnchor": [16,48]
+}
 installers_icons = {
-    "1": icon_green,
+    "1": icon_black,
     "0": icon_red
 }
 orders_icons = {
