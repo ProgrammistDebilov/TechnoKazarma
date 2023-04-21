@@ -1,5 +1,5 @@
 from dash import *
-from dash_leaflet import TileLayer, Map, LocateControl
+from dash_leaflet import TileLayer, Map, LocateControl, Marker, Tooltip
 from dash.dependencies import Output, Input
 import Backend.work_db as db
 from geopy.geocoders import Photon
@@ -8,15 +8,32 @@ app = dash.Dash(__name__)
 # define icons
 icon_green = {
     "iconUrl": 'https://i.ibb.co/SmZPXPc/25962fdc-4e92-4303-97c6-ea2c7e52d4cc.png',
-    "iconSize": [38, 95],  # size of the icon
+    "iconSize": [32, 48],  # size of the icon
+    "iconAnchor": [16,48]
 }
 icon_red = {
     "iconUrl": 'https://i.ibb.co/dKP3Lm5/2c4a6b06-72cd-49e1-950d-ec2d5295d9b5.png',
-    "iconSize": [38, 95],  # size of the icon
+    "iconSize": [32, 48],  # size of the icon
+    "iconAnchor": [16,48]
 }
 icon_yellow = {
     "iconUrl": 'https://i.ibb.co/zfvg2jM/f18848bd-2052-47cd-9679-8651bd705346.png',
-    "iconSize": [38, 95],  # size of the icon
+    "iconSize": [32, 48],  # size of the icon
+    "iconAnchor": [16,48]
+}
+icon_blue = {
+    "iconUrl": 'https://i.ibb.co/cLc0LqR/5a4e9025-e5d4-4696-93c1-219f3821567d.png',
+    "iconSize": [32, 48],  # size of the icon
+    "iconAnchor": [16,48]
+}
+installers_icons = {
+    "1": icon_green,
+    "0": icon_red
+}
+orders_icons = {
+    "-1": icon_blue,
+    "0": icon_yellow,
+    "1": icon_green
 }
 #define geolocator
 geolocator = Photon(user_agent="MyApp")
@@ -28,7 +45,7 @@ app.layout = html.Div([
     Map( style={'width': 'auto', 'height': '95vh', 'margin': "auto", "display": "block"}, zoom=3, id= 'map'),
     dcc.Interval(
         id='interval',
-        interval=2000, # Refresh every 2 seconds
+        interval=2500, # Refresh every 2.5 seconds
         n_intervals=0
     ),
     html.Div(id="text"),
@@ -51,18 +68,18 @@ app.layout = html.Div([
 )
 # function to update every single thing
 def update_every_fucking_thing(n,k,j):
+    markers = [TileLayer(), LocateControl(options={'locateOptions': {'enableHighAccuracy': True}})]
     login = k[1::]
     name_login = "Ваш логин: " + login
     if j != None:
         db.insert_location(login, j[0], j[1])
-    markers = [TileLayer(), LocateControl(options={'locateOptions': {'enableHighAccuracy': True}})]
     for i,j in enumerate(db.return_installers()):
-        markers.append({'props': {'children': {'props': {'children': j['login']}, 'type': 'Tooltip', 'namespace': 'dash_leaflet'}, 'id': str(i), 'position': db.return_location(j['login'])}, 'type': 'Marker', 'namespace': 'dash_leaflet'})
+        markers.append(Marker(id = str(i), icon=installers_icons[str(j['alacrity'])], position=db.return_location(j['login']), children=Tooltip(j['login'])))
         max_num = i
     for i,j in enumerate(db.return_orders()):
         location = geolocator.geocode(j['adress'])
         k = max_num + i + 1
-        markers.append({'props': {'children': {'props': {'children': location.address}, 'type': 'Tooltip', 'namespace': 'dash_leaflet'}, 'id': str(k), 'position':[ location.latitude, location.longitude] }, 'type': 'Marker', 'namespace': 'dash_leaflet'})
+        markers.append(Marker(id = str(k), icon = orders_icons[str(j['state'])], position = [location.latitude, location.longitude], children=Tooltip(location.address)))
     return [markers,name_login]
 
 
